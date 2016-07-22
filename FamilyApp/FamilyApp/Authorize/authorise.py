@@ -7,8 +7,10 @@ import server
 import threading                     
 #from Graph.config import client_id, client_secret
 
-def auth():
-    url = auth_helper.get_signin_url('http://localhost:4321')
+redir = 'http://localhost:4321'
+
+def authCode():
+    url = auth_helper.get_signin_url()
     print (url)
     webbrowser.open_new_tab(url)
     r = requests.get(url)
@@ -18,7 +20,20 @@ def auth():
     except requests.HTTPError:
         raise RuntimeError('unable to obtain authorization token')
 
-    threading._start_new_thread(server.flaskThread())
+    code = threading._start_new_thread(server.flaskThread())
+
+    return code
+
+def loginProcess():
+    try:
+        code = auth()
+        token = auth_helper.get_token_from_code(code, redir)
+
+        userInfoJson = auth_helper.get_user_info_from_token(token)
+
+        #Register user now with the individual class
+    except Exception as e:
+        print(e)
 
 
 

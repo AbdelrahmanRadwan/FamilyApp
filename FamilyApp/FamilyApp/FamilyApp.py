@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-
+import sys
+sys.path.append('C:/Users/t-alhass/Source/Repos/FamilyApp/FamilyApp/FamilyApp')
 from projectoxford import speech
 from projectoxford import audio
 from Authorize import authorise  
+from Graph import auth_helper
 
 
-authorise.auth()
+authorise.loginProcess()
 
 #token = r.json()
 

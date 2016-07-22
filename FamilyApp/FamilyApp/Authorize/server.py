@@ -7,7 +7,7 @@ app = Flask("__main__")
 def responseHandler():
     r = request.args.get('code', '')
     print(r)
-    return
+    return r
     #return jsonify({"content": "Hello World!"})
 
 # sample post request
