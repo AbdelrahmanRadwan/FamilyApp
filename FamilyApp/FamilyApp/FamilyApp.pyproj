@@ -22,7 +22,52 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Authorize\authorise.py" />
+    <Compile Include="Authorize\server.py" />
+    <Compile Include="Authorize\__init__.py" />
+    <Compile Include="Event.py" />
     <Compile Include="FamilyApp.py" />
+    <Compile Include="Graph\auth_helper.py" />
+    <Compile Include="Graph\config.py" />
+    <Compile Include="Graph\data.py" />
+    <Compile Include="Graph\graph_service.py" />
+    <Compile Include="Graph\urls.py" />
+    <Compile Include="Graph\views.py" />
+    <Compile Include="Graph\__init__.py" />
+    <Compile Include="projectoxford\audio.py" />
+    <Compile Include="projectoxford\luis.py" />
+    <Compile Include="projectoxford\speech.py" />
+    <Compile Include="projectoxford\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Authorize\" />
+    <Folder Include="Authorize\__pycache__\" />
+    <Folder Include="Graph\" />
+    <Folder Include="Graph\__pycache__\" />
+    <Folder Include="projectoxford\" />
+    <Folder Include="projectoxford\tests\" />
+    <Folder Include="projectoxford\tests\__pycache__\" />
+    <Folder Include="projectoxford\__pycache__\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Authorize\__pycache__\authorise.cpython-34.pyc" />
+    <Content Include="Authorize\__pycache__\__init__.cpython-34.pyc" />
+    <Content Include="Graph\__pycache__\auth_helper.cpython-34.pyc" />
+    <Content Include="Graph\__pycache__\config.cpython-34.pyc" />
+    <Content Include="Graph\__pycache__\__init__.cpython-34.pyc" />
+    <Content Include="projectoxford\tests\__pycache__\__init__.cpython-32.pyc" />
+    <Content Include="projectoxford\_speech.py.swp" />
+    <Content Include="projectoxford\__init__.pyc" />
+    <Content Include="projectoxford\__pycache__\audio.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\audio.cpython-34.pyc" />
+    <Content Include="projectoxford\__pycache__\audio.cpython-35.pyc" />
+    <Content Include="projectoxford\__pycache__\luis.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\speech.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\speech.cpython-34.pyc" />
+    <Content Include="projectoxford\__pycache__\speech.cpython-35.pyc" />
+    <Content Include="projectoxford\__pycache__\__init__.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\__init__.cpython-34.pyc" />
+    <Content Include="projectoxford\__pycache__\__init__.cpython-35.pyc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
