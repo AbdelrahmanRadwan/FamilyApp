@@ -1,8 +1,8 @@
 from queue import priorityqueue
 
-priorities = [ 'high' :1,
+priorities = { 'high' :1,
               'medium' :2,
-              'low' :3]
+              'low' :3}
 
 class Todo(object):
 
@@ -20,3 +20,5 @@ class TodoList(object):
 
     def finishedTodo(self, todo:Todo):
         q.get(todo)
+
+    

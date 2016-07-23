@@ -43,6 +43,9 @@
     <Compile Include="projectoxford\speech.py" />
     <Compile Include="projectoxford\__init__.py" />
     <Compile Include="Reminders.py" />
+    <Compile Include="ShoppingList.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Todo.py" />
     <Compile Include="__init__.py">
       <SubType>Code</SubType>
