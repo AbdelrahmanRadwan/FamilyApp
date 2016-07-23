@@ -28,6 +28,7 @@
     <Compile Include="Authorize\authorise.py" />
     <Compile Include="Authorize\server.py" />
     <Compile Include="Authorize\__init__.py" />
+    <Compile Include="Calendar.py" />
     <Compile Include="Event.py" />
     <Compile Include="FamilyApp.py" />
     <Compile Include="Graph\auth_helper.py" />
@@ -41,6 +42,8 @@
     <Compile Include="projectoxford\luis.py" />
     <Compile Include="projectoxford\speech.py" />
     <Compile Include="projectoxford\__init__.py" />
+    <Compile Include="Reminders.py" />
+    <Compile Include="Todo.py" />
     <Compile Include="__init__.py">
       <SubType>Code</SubType>
     </Compile>
