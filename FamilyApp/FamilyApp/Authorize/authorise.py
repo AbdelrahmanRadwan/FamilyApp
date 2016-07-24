@@ -46,7 +46,7 @@ def loginProcess():
         token = auth_helper.get_token_from_code(code, redir)
         print("token" , token)
         userInfoJson = auth_helper.get_user_info_from_token(token)
-
+        return userInfoJson
         #Register user now with the individual class
     except Exception as e:
         print(e)

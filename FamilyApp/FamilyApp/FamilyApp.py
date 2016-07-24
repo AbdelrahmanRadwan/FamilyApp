@@ -4,7 +4,7 @@
 from Authorize import authorise  
 from projectoxford import speech
 
-authorise.loginProcess()
+#authorise.loginProcess()
 
 #token = r.json()
 

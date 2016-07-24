@@ -24,6 +24,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AuthInfo.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Authorize\authorise.py" />
     <Compile Include="Authorize\server.py" />
     <Compile Include="Authorize\__init__.py" />
@@ -37,12 +40,26 @@
     <Compile Include="Graph\urls.py" />
     <Compile Include="Graph\views.py" />
     <Compile Include="Graph\__init__.py" />
+    <Compile Include="Individual.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Speaker\EnrollmentResponse.py" />
+    <Compile Include="Speaker\IdentificationProfile.py" />
+    <Compile Include="Speaker\IdentificationResponse.py" />
+    <Compile Include="Speaker\IdentificationServiceHttpClientHelper.py" />
+    <Compile Include="Speaker\ProfileCreationResponse.py" />
     <Compile Include="projectoxford\audio.py" />
     <Compile Include="projectoxford\luis.py" />
     <Compile Include="projectoxford\speech.py" />
     <Compile Include="projectoxford\__init__.py" />
     <Compile Include="Reminders.py" />
     <Compile Include="ShoppingList.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Speaker\speaker.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Speaker\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Todo.py" />
@@ -53,6 +70,7 @@
   <ItemGroup>
     <Folder Include="Authorize\" />
     <Folder Include="Graph\" />
+    <Folder Include="Speaker\" />
     <Folder Include="projectoxford\" />
     <Folder Include="projectoxford\tests\" />
     <Folder Include="projectoxford\tests\__pycache__\" />
