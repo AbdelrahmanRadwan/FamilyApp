@@ -1,11 +1,8 @@
 #!/usr/bin/python3
-import sys
-sys.path.append('C:/Users/t-alhass/Source/Repos/FamilyApp/FamilyApp/FamilyApp')
-from projectoxford import speech
-from projectoxford import audio
-from Authorize import authorise  
-from Graph import auth_helper
 
+
+from Authorize import authorise  
+from projectoxford import speech
 
 authorise.loginProcess()
 

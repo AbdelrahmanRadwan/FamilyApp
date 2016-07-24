@@ -4,7 +4,7 @@ from urllib.parse import quote, urlencode
 import base64
 import json
 import requests
-from FamilyApp.Graph.config import client_id, client_secret
+from config import client_id, client_secret
 
 # The URL of the home page of the app. Leave as default if running on localhost:8000.
 home_page_url = 'http://127.0.0.1:8000/'

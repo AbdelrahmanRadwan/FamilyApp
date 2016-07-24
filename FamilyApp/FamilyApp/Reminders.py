@@ -15,18 +15,18 @@ def createReminder(alias: str, title: str, startDateTime: datetime):
         'Authorization' : 'Bearer {0}'.format(access_token),
         'Content-Type' : 'application/json'
         }
-        data = {
-        'subject' = "Reminder"+title,
-        'start' = startDateTime+timeZone,
-        'isReminderOn' = True,
-        'reminderMinutesBeforeStart' = 0
+    data = {
+        'subject' : "Reminder"+title,
+        'start' : startDateTime+timeZone,
+        'isReminderOn' : True,
+        'reminderMinutesBeforeStart' : 0
         }
         
-        r = requests.post(url = new_reminder_url, data = data, headers = headers)
-        if (r.status_code == requests.codes.accepted):
-            return r.status_code
-        else:
-            return "{0}: {1}".format(r.status_code, r.text)
+    r = requests.post(url = new_reminder_url, data = data, headers = headers)
+    if (r.status_code == requests.codes.accepted):
+        return r.status_code
+    else:
+        return "{0}: {1}".format(r.status_code, r.text)
 
 def deleteReminder():
     delete_reminder_url = graph_api_endpoint.format('/Users'+alias+'calendar/events')
@@ -36,15 +36,15 @@ def deleteReminder():
         'Authorization' : 'Bearer {0}'.format(access_token),
         'Content-Type' : 'application/json'
         }
-        data = {
-        'subject' = "Reminder"+title,
-        'start' = startDateTime+timeZone,
-        'isReminderOn' = True,
-        'reminderMinutesBeforeStart' = 0
+    data = {
+        'subject' : "Reminder"+title,
+        'start' : startDateTime+timeZone,
+        'isReminderOn' : True,
+        'reminderMinutesBeforeStart' : 0
         }
         
-        r = requests.post(url = new_reminder_url, data = data, headers = headers)
-        if (r.status_code == requests.codes.accepted):
-            return r.status_code
-        else:
-            return "{0}: {1}".format(r.status_code, r.text)
+    r = requests.post(url = new_reminder_url, data = data, headers = headers)
+    if (r.status_code == requests.codes.accepted):
+        return r.status_code
+    else:
+        return "{0}: {1}".format(r.status_code, r.text)

@@ -33,7 +33,7 @@ def newEvent(alias, title, startDateTime, endDateTime , location, companions, re
 
 
 def listEvents( alias):
-    list_events_url = graph_api_endpoint.format('/Users'+alias+'/events$top=5')
+    list_events_url = graph_api_endpoint.format('/Users'+alias+'/calendar/events$top=5')
 
     # Set request headers.
     headers = { 
@@ -51,7 +51,7 @@ def listEvents( alias):
 
 
 def getEventDetailsByTitle( alias, title):
-    get_event_details_url = graph_api_endpoint.format('/Users'+alias+'/events$filter=substringof(subject,'+title+')')
+    get_event_details_url = graph_api_endpoint.format('/Users'+alias+'/calendar/events$filter=substringof(subject,'+title+')')
         
     # Set request headers.
     headers = { 
@@ -69,7 +69,7 @@ def getEventDetailsByTitle( alias, title):
         return "{0}: {1}".format(response.status_code, response.text)
 
 def getEventDetailsByDate( alias, datetime):
-    get_event_details_url = graph_api_endpoint.format("/Users"+alias+"/events$filter=substringof(start,datetime'"+datetime+"')")
+    get_event_details_url = graph_api_endpoint.format("/Users"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
         
     # Set request headers.
     headers = { 
@@ -128,4 +128,6 @@ def delete( alias, title):
     else:
         return "{0}: {1}".format(response.status_code, response.text)
        
-        
+def identifyEvent(alias, **options):
+
+       get_event_details_url = graph_api_endpoint.format("/Users"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")

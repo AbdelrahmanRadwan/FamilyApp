@@ -6,8 +6,7 @@
     <ProjectGuid>cce05e9e-6e85-4e13-acda-27a742816f23</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>FamilyApp.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>.;Authorize\;Graph\;projectoxford\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>FamilyApp</Name>
@@ -31,8 +30,8 @@
     <Compile Include="Calendar.py" />
     <Compile Include="Event.py" />
     <Compile Include="FamilyApp.py" />
-    <Compile Include="Graph\auth_helper.py" />
-    <Compile Include="Graph\config.py" />
+    <Compile Include="Authorize\auth_helper.py" />
+    <Compile Include="Authorize\config.py" />
     <Compile Include="Graph\data.py" />
     <Compile Include="Graph\graph_service.py" />
     <Compile Include="Graph\urls.py" />
@@ -53,33 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Authorize\" />
-    <Folder Include="Authorize\__pycache__\" />
     <Folder Include="Graph\" />
-    <Folder Include="Graph\__pycache__\" />
     <Folder Include="projectoxford\" />
     <Folder Include="projectoxford\tests\" />
     <Folder Include="projectoxford\tests\__pycache__\" />
-    <Folder Include="projectoxford\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Authorize\__pycache__\authorise.cpython-34.pyc" />
-    <Content Include="Authorize\__pycache__\__init__.cpython-34.pyc" />
-    <Content Include="Graph\__pycache__\auth_helper.cpython-34.pyc" />
-    <Content Include="Graph\__pycache__\config.cpython-34.pyc" />
-    <Content Include="Graph\__pycache__\__init__.cpython-34.pyc" />
     <Content Include="projectoxford\tests\__pycache__\__init__.cpython-32.pyc" />
-    <Content Include="projectoxford\_speech.py.swp" />
-    <Content Include="projectoxford\__init__.pyc" />
-    <Content Include="projectoxford\__pycache__\audio.cpython-32.pyc" />
-    <Content Include="projectoxford\__pycache__\audio.cpython-34.pyc" />
-    <Content Include="projectoxford\__pycache__\audio.cpython-35.pyc" />
-    <Content Include="projectoxford\__pycache__\luis.cpython-32.pyc" />
-    <Content Include="projectoxford\__pycache__\speech.cpython-32.pyc" />
-    <Content Include="projectoxford\__pycache__\speech.cpython-34.pyc" />
-    <Content Include="projectoxford\__pycache__\speech.cpython-35.pyc" />
-    <Content Include="projectoxford\__pycache__\__init__.cpython-32.pyc" />
-    <Content Include="projectoxford\__pycache__\__init__.cpython-34.pyc" />
-    <Content Include="projectoxford\__pycache__\__init__.cpython-35.pyc" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\3.4" />
