@@ -1,6 +1,8 @@
 from Authorize import authorise
 from Speaker import speaker
-
+from Speaker import EnrollmentResponse
+from projectoxford import speech
+from projectoxford import audio
 _SPEAKER_KEY = ac0e581a57e647e0a38afd0e51639a70
 
 class Individual(object):
@@ -25,6 +27,14 @@ class Individual(object):
 
     def enroll(self, wavFile):
         try:
-            speaker.enroll_profile(_SPEAKER_KEY,speakerProfileID, wavFile)
+            count=0
+            speech.say("Beginning enrollment.")
+            while(count<4):
+                enrollmess = "Please speak the sentence shown on the screen."
+                speech.say(enrollmess)
+                audio.record(
+                enrollRes = speaker.enroll_profile(_SPEAKER_KEY,speakerProfileID, wavFile)
+                enrollRes.get_enrollment_status()
+
         except: 
-            
+             Print("Enrollment failed")
