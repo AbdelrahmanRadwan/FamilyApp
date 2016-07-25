@@ -3,8 +3,17 @@
 
 from Authorize import authorise  
 from projectoxford import speech
+from Individual import Individual
 
-
+while(1):
+    inputName = input("Please enter your first name to begin. \n")
+    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
+    if res == 'y':
+        break
+print("\nCreating profile.")
+person = Individual(inputName)
+print("Profile created. " +person.speakerProfileID)
+person.enroll()
 
 #authorise.loginProcess()
 

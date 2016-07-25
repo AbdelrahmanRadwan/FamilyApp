@@ -17,7 +17,7 @@ import time
 import uuid
 import sys
 
-import projectoxford.audio
+import audio
 
 _API_SCOPE = "https://speech.platform.bing.com"
 

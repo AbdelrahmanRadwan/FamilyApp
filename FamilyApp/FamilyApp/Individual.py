@@ -4,9 +4,11 @@ from Speaker import EnrollmentResponse
 from projectoxford import speech
 from projectoxford import audio
 import random
+import wave
 
-_SPEAKER_KEY = ac0e581a57e647e0a38afd0e51639a70
+_SPEAKER_KEY = 'ac0e581a57e647e0a38afd0e51639a70'
 _SUCCESSFULL_ENROLLMENT = "succeeded"
+sp = speech.SpeechClient(key = 'e7e321f984f24f5299c185e9f2658a3b', gender='Male')
 
 class Individual(object):
     """description of class"""
@@ -29,28 +31,33 @@ class Individual(object):
         except:
             Print("Login failed")
 
-    def enroll(self, wavFile):
+    def enroll(self):
 
         enrollmess = "Please speak the text shown on the screen."
         successfullMess = "Enrollement was successfull. "+self.name+ " now enrolled." #How can I help " + self.name +"?"
         repeatEnroll = "Enrollment was not successful. Please say the following text."
         try:
             count=0
-            speech.say("Beginning enrollment.")
-            speech.say(enrollmess)
+            sp.say("Beginning enrollment.")
+            sp.say(enrollmess)
             while(count<4):
                 count+=1
                 #Print the text that should be spoken to enroll
-                print(speaker.enrollmentExcerpts[random.randint(0,speaker.enrollmentExcerpts.count-1)])
-                wav = "Recordings/"+self.name+count+".wav"
-                audio.record(wav,channels = 1,sample_rate = 16000,bits_per_sample=16,seconds=23,wait_for_sound=True)
+                print(speaker.enrollmentExcerpts[random.randint(0,len(speaker.enrollmentExcerpts)-1)])
+                wav = "Recordings/"+self.name+str(count)+".wav"
+                fileOpen = wave.open(wav,'w')
+                fileOpen.setnchannels(1)
+                fileOpen.setsampwidth(2)
+                fileOpen.setframerate(16000)
+                audio.record(wav=fileOpen,seconds=23, quiet_seconds=1)
+                print("done recording")
                 enrollRes = speaker.enroll_profile(_SPEAKER_KEY,self.speakerProfileID, wav)
                 print("Waiting for enrollment results")
-                print("enrollRes type:" + type(enrollRes))
+                #print("enrollRes type:" + type(enrollRes))
                 if enrollRes.get_enrollment_status == _SUCCESSFULL_ENROLLMENT :
-                    say(successfullMess)
+                    sp.say(successfullMess)
                     break
                 else:
-                    say(repeatEnroll)
+                    sp.say(repeatEnroll)
         except: 
-             Print("Enrollment failed")
+             print("Enrollment failed")

@@ -34,24 +34,23 @@ import IdentificationServiceHttpClientHelper
 import sys
 
 enrollmentExcerpts = [
-    { "Martin Luther King Jr" : '''I am happy to join with you today in what will go down in history as the greatest demonstration
-                             for freedom in the history of our nation. Five score years ago, a great American, in whose symbolic
-                             shadow we stand today, signed the Emancipation Proclamation. This momentous decree came as a great 
-                             beacon light of hope to millions of Negro slaves who had been seared in the flames of withering 
-                             injustice. It came as a joyous daybreak to end the long night of their captivity. But one hundred years 
-                             later, the Negro still is not free.'''},
+    { "Martin Luther King Jr" : '''I am happy to join with you today in what will go down in history as the greatest demonstration for freedom in the history of our nation. Five score years ago, a great American, in whose symbolic
+shadow we stand today, signed the Emancipation Proclamation. This momentous decree came as a great 
+beacon light of hope to millions of Negro slaves who had been seared in the flames of withering 
+injustice. It came as a joyous daybreak to end the long night of their captivity. But one hundred years 
+later, the Negro still is not free.'''},
     {"Abraham Lincoln": '''Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in 
-                            Liberty, and dedicated to the proposition that all men are created equal. Now we are engaged in a great 
-                            civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure. We 
-                            are met on a great battle-field of that war. We have come to dedicate a portion of that field, as a final 
-                            resting place for those who here gave their lives that that nation might live. It is altogether fitting and
-                            proper that we should do this.''' },
+Liberty, and dedicated to the proposition that all men are created equal. Now we are engaged in a great 
+civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure. We 
+are met on a great battle-field of that war. We have come to dedicate a portion of that field, as a final 
+resting place for those who here gave their lives that that nation might live. It is altogether fitting and
+proper that we should do this.''' },
     {"William Lyon Phelps": '''The habit of reading is one of the greatest resources of mankind; and we enjoy reading books that belong 
-                            to us much more than if they are borrowed. A borrowed book is like a guest in the house; it must be treated 
-                            with punctiliousness, with a certain considerate formality. You must see that it sustains no damage; it must 
-                            not suffer while under your roof. You cannot leave it carelessly, you cannot mark it, you cannot turn down 
-                            the pages, you cannot use it familiarly. And then, some day, although this is seldom done, you really ought 
-                            to return it.'''}
+to us much more than if they are borrowed. A borrowed book is like a guest in the house; it must be treated 
+with punctiliousness, with a certain considerate formality. You must see that it sustains no damage; it must 
+not suffer while under your roof. You cannot leave it carelessly, you cannot mark it, you cannot turn down 
+the pages, you cannot use it familiarly. And then, some day, although this is seldom done, you really ought 
+to return it.'''}
 
 
 ]
