@@ -70,6 +70,7 @@
   <ItemGroup>
     <Folder Include="Authorize\" />
     <Folder Include="Graph\" />
+    <Folder Include="Recordings\" />
     <Folder Include="Speaker\" />
     <Folder Include="projectoxford\" />
     <Folder Include="projectoxford\tests\" />
