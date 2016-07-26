@@ -5,6 +5,7 @@ app = Flask("__main__")
 @app.route("/", methods=['GET'])
 def responseHandler():
     r = request.args.get('code', '')
+    #q.put(r)
     return r
     
     

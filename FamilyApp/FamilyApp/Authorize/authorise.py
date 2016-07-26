@@ -5,7 +5,8 @@ import auth_helper,config
 import requests
 import webbrowser
 import server
-import threading                     
+import threading  
+import queue                   
 #from Graph.config import client_id, client_secret
 
 redir = 'http://localhost:4321'
@@ -14,6 +15,8 @@ redir = 'http://localhost:4321'
 
 def authCode():
 
+    q = queue.Queue()
+
     try:
         t= threading.Thread(target = server.flaskThread)
         t.start()
@@ -21,7 +24,7 @@ def authCode():
         print("Server failed to start")
 
     url = auth_helper.get_signin_url(redir)
-    webbrowser.open_new(url)
+    webbrowser.open_new_tab(url)
 
     try:
         print("postthread")
@@ -33,6 +36,7 @@ def authCode():
         print('unable to obtain authorization token')
     code = receiveAuth()
     print ("\ncode:" +code)
+    #print("q" ,q)
     return code
 
 def dummy():
@@ -54,7 +58,7 @@ def loginProcess():
 
 def receiveAuth():
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    add = ('localhost', 4321)
+    add = (socket.gethostname(), 4321)
     print (sys.stderr, 'starting up on %s port %s' %add)
     sock.bind(add)
 

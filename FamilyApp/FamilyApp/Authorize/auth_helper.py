@@ -26,7 +26,7 @@ def get_signin_url(redirect_uri):
   params = { 'client_id': client_id,
              'redirect_uri': redirect_uri,
              'response_type': 'code',
-             'scope': 'openid'
+             'scope': 'openid User.ReadWrite Mail.ReadWrite Mail.Send Calendars.ReadWrite offline_access'
            }
 
   signin_url = authorize_url.format(urlencode(params))
