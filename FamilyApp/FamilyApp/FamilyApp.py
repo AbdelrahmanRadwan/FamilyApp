@@ -7,21 +7,23 @@ from Individual import Individual
 import Event
 import datetime
 from Speaker import speaker
+import wave
+import audio 
 
-while(1):
-    inputName = input("Please enter your first name to begin. \n")
-    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
-    if res == 'y':
-        break
-print("\nCreating profile.")
-person = Individual(inputName)
-print("Profile created. " +person.speakerProfileID)
+#while(1):
+#    inputName = input("Please enter your first name to begin. \n")
+#    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
+#    if res == 'y':
+#        break
+#print("\nCreating profile.")
+#person = Individual(inputName)
+#print("Profile created. " +person.speakerProfileID)
 
-person.login()
+#person.login()
 
-person.enroll()
+#person.enroll()
 
-speaker.print_all_profiles()
+speaker.print_all_profiles(Individual._SPEAKER_KEY)
 
 print("speak now")
 wav = "Recordings/tester.wav"
@@ -29,10 +31,11 @@ fileOpen = wave.open(wav,'w')
 fileOpen.setnchannels(1)
 fileOpen.setsampwidth(2)
 fileOpen.setframerate(16000)
-audio.record(wav=fileOpen,seconds=23, quiet_seconds=1)
+audio.record(wav=fileOpen,seconds=8, wait_for_sound = True)
 print("done recording")
 
-dd = speaker.identify_file(Individual._SPEAKER_KEY,wav, person.speakerProfileID)
+list = ['fa7634f7-58cb-4bed-a1a5-d7c1a83552d5']
+dd = speaker.identify_file(Individual._SPEAKER_KEY,wav, list)
 print(dd)
 #r = Event.newEvent(person.graphInfo.access_token, person.graphInfo.getAUD(),"Test Event", startDateTime=datetime.datetime(2016,7,26,18), endDateTime=datetime.datetime(2016,7,26,19),reminder = True)
 #print(r)

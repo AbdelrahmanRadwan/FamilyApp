@@ -36,7 +36,7 @@ class Individual(object):
     def enroll(self):
 
         enrollmess = "Please speak the text shown on the screen."
-        successfullMess = "Enrollement was successfull. "+self.name+ " now enrolled." #How can I help " + self.name +"?"
+        successfullMess = "Enrollment was successfull. "+self.name+ " now enrolled." #How can I help " + self.name +"?"
         repeatEnroll = "Enrollment was not successful. Please say the following text."
         try:
             count=0
@@ -51,12 +51,13 @@ class Individual(object):
                 fileOpen.setnchannels(1)
                 fileOpen.setsampwidth(2)
                 fileOpen.setframerate(16000)
-                audio.record(wav=fileOpen,seconds=30,wait_for_sound=True)
+                audio.record(wav=fileOpen,seconds=35,wait_for_sound=True)
                 print("done recording")
                 enrollRes = speaker.enroll_profile(Individual._SPEAKER_KEY,self.speakerProfileID, wav)
                 print("Waiting for enrollment results")
                 #print("enrollRes type:" + type(enrollRes))
-                if enrollRes.get_enrollment_status == Individual._SUCCESSFULL_ENROLLMENT :
+                print ( enrollRes.get_enrollment_status())
+                if enrollRes.get_enrollment_status() == Individual._SUCCESSFULL_ENROLLMENT :
                     sp.say(successfullMess)
                     break
                 else:

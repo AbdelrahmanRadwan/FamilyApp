@@ -172,9 +172,10 @@ class IdentificationServiceHttpClientHelper:
             if len(test_profile_ids) < 1:
                 raise Exception('Error identifying file: no test profile IDs are provided.')
             test_profile_ids_str = ','.join(test_profile_ids)
-            request_url = '{0}?identificationProfileIds={1}'.format(
+
+            request_url = '{0}?identificationProfileIds={1}&shortAudio={2}'.format(
                 self._IDENTIFICATION_URI,
-                urllib.parse.quote(test_profile_ids_str))
+                urllib.parse.quote(test_profile_ids_str),True)
 
             # Prepare the body of the message
             with open(file_path, 'rb') as body:
@@ -199,7 +200,7 @@ class IdentificationServiceHttpClientHelper:
                 raise Exception('Error identifying file: ' + reason)
         except:
             logging.error('Error identifying file.')
-            raise
+            raise  
 
     def _poll_operation(self, operation_url):
         """Polls on an operation till it is done
