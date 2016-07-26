@@ -5,6 +5,10 @@ app = Flask("__main__")
 @app.route("/", methods=['GET'])
 def responseHandler():
     r = request.args.get('code', '')
+    file = open("Textfiles\\authCode.txt",'w')
+    file.write(r)
+    file.close()
+    shutdown_server()
     #q.put(r)
     return r
     
@@ -23,6 +27,12 @@ def incr():
 #        raise RuntimeError('Not running with the Werkzeug Server')
 #    func()
 #    return "Shutting down..."
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
 
 def flaskThread():
     app.run(host='0.0.0.0', port=4321, use_reloader=False)

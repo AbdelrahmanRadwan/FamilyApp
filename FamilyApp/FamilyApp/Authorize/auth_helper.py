@@ -47,11 +47,11 @@ def get_token_from_code(auth_code, redirect_uri):
                 'code': auth_code,
                 'redirect_uri': redirect_uri,
                 'client_id': client_id,
-                'client_secret': client_secret,
-                'resource': 'https://graph.microsoft.com'
+                'client_secret': client_secret
+                #'resource': 'https://graph.microsoft.io'
               }
               
-  r = requests.post(token_url, data = post_data)
+  r = requests.post(token_url, data = urlencode(post_data))
   
   try:
     return r.json()

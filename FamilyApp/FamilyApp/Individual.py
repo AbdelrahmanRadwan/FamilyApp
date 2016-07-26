@@ -15,8 +15,9 @@ class Individual(object):
     numOfIndividuals = 0
     random.seed()
 
-    def __init__(self, name):
+    def __init__(self, name, graphInfo = None):
         self.name = name
+        self.graphInfo = graphInfo
         Individual.numOfIndividuals +=1
 
         try:
@@ -26,8 +27,8 @@ class Individual(object):
 
     def login(self):
         try:
-            userInfo =authorise.loginProcess
-            self.userInfo = userInfo
+            self.graphInfo =authorise.loginProcess()
+            
         except:
             Print("Login failed")
 
