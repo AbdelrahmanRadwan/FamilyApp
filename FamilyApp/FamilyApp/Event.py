@@ -7,8 +7,8 @@ import uuid
 graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 
 
-def newEvent(alias, title, startDateTime, endDateTime , location, companions, reminder = False , notes = None):
-    new_event_url = graph_api_endpoint.format('/Users'+alias+'/events')
+def newEvent(access_token,alias, title, startDateTime, endDateTime=None , location=None, companions=None, reminder = False , notes = None):
+    new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
     # Set request headers.
     headers = { 
@@ -16,20 +16,23 @@ def newEvent(alias, title, startDateTime, endDateTime , location, companions, re
     'Accept' : 'application/json',
     'Content-Type' : 'application/json'
     }
-    data = {'subject' : title,
-            'start' : startDateTime,
-            'end' : endDateTime,
-            'location' : location,
-            'attendees' : companions,
-            'isReminderOn' : reminder,
-            'reminderMinutesBeforeStart' : 60
+    data = {"subject" : title,
+            "start" : {"@odata.type": {"dateTime" : str(startDateTime), "timeZone" : "Africa/Cairo"}},
+            "end" : {"@odata.type": {"dateTime" : str(endDateTime), "timeZone" : "Africa/Cairo"}},
+            "location" : location,
+            "attendees" : companions,
+            "isReminderOn" : reminder,
+            "reminderMinutesBeforeStart" : str(60)
             }
 
-    r = requests.post(url = new_event_url, data = data, headers = headers)
-    if (response.status_code == requests.codes.accepted):
-        return response.status_code
+    #data = json.dumps(data)
+    #print (type(data))
+    #print (str(data))
+    r = requests.post(url = new_event_url, data = json.dumps(data), headers = headers)
+    if (r.status_code == requests.codes.accepted):
+        return r.status_code
     else:
-        return "{0}: {1}".format(response.status_code, response.text)
+        return "{0}: {1}".format(r.status_code, r.text)
 
 
 def listEvents( alias):

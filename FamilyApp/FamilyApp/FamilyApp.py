@@ -4,19 +4,39 @@
 from Authorize import authorise  
 from projectoxford import speech
 from Individual import Individual
+import Event
+import datetime
+from Speaker import speaker
 
-#while(1):
-#    inputName = input("Please enter your first name to begin. \n")
-#    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
-#    if res == 'y':
-#        break
-#print("\nCreating profile.")
-#person = Individual(inputName)
-#print("Profile created. " +person.speakerProfileID)
-#person.enroll()
+while(1):
+    inputName = input("Please enter your first name to begin. \n")
+    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
+    if res == 'y':
+        break
+print("\nCreating profile.")
+person = Individual(inputName)
+print("Profile created. " +person.speakerProfileID)
 
-authorise.loginProcess()
+person.login()
 
+person.enroll()
+
+speaker.print_all_profiles()
+
+print("speak now")
+wav = "Recordings/tester.wav"
+fileOpen = wave.open(wav,'w')
+fileOpen.setnchannels(1)
+fileOpen.setsampwidth(2)
+fileOpen.setframerate(16000)
+audio.record(wav=fileOpen,seconds=23, quiet_seconds=1)
+print("done recording")
+
+dd = speaker.identify_file(Individual._SPEAKER_KEY,wav, person.speakerProfileID)
+print(dd)
+#r = Event.newEvent(person.graphInfo.access_token, person.graphInfo.getAUD(),"Test Event", startDateTime=datetime.datetime(2016,7,26,18), endDateTime=datetime.datetime(2016,7,26,19),reminder = True)
+#print(r)
+#
 #token = r.json()
 
 #token = auth_helper.get_token_from_code(, 'urn:ietf:wg:oauth:2.0:oob')

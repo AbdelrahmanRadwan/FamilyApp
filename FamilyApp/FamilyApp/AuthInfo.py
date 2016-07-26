@@ -19,6 +19,9 @@ class GraphInfo(object):
     def getSUB(self):
         return self.user_info_json["sub"]
 
+    def getAUD(self):
+        return self.user_info_json["aud"]
+
 class SpeakerInfo(object):
     """description of class"""
 

@@ -6,14 +6,15 @@ from projectoxford import audio
 import random
 import wave
 
-_SPEAKER_KEY = 'ac0e581a57e647e0a38afd0e51639a70'
-_SUCCESSFULL_ENROLLMENT = "succeeded"
+
 sp = speech.SpeechClient(key = 'e7e321f984f24f5299c185e9f2658a3b', gender='Male')
 
 class Individual(object):
     """description of class"""
     numOfIndividuals = 0
     random.seed()
+    _SPEAKER_KEY = 'ac0e581a57e647e0a38afd0e51639a70'
+    _SUCCESSFULL_ENROLLMENT = "Enrolled"
 
     def __init__(self, name, graphInfo = None):
         self.name = name
@@ -21,7 +22,7 @@ class Individual(object):
         Individual.numOfIndividuals +=1
 
         try:
-            self.speakerProfileID = speaker.create_profile(_SPEAKER_KEY,'EN-US')
+            self.speakerProfileID = speaker.create_profile(Individual._SPEAKER_KEY,'EN-US')
         except:
             print("Error creating the speaker user profile")
 
@@ -50,12 +51,12 @@ class Individual(object):
                 fileOpen.setnchannels(1)
                 fileOpen.setsampwidth(2)
                 fileOpen.setframerate(16000)
-                audio.record(wav=fileOpen,seconds=23, quiet_seconds=1)
+                audio.record(wav=fileOpen,seconds=30,wait_for_sound=True)
                 print("done recording")
-                enrollRes = speaker.enroll_profile(_SPEAKER_KEY,self.speakerProfileID, wav)
+                enrollRes = speaker.enroll_profile(Individual._SPEAKER_KEY,self.speakerProfileID, wav)
                 print("Waiting for enrollment results")
                 #print("enrollRes type:" + type(enrollRes))
-                if enrollRes.get_enrollment_status == _SUCCESSFULL_ENROLLMENT :
+                if enrollRes.get_enrollment_status == Individual._SUCCESSFULL_ENROLLMENT :
                     sp.say(successfullMess)
                     break
                 else:
