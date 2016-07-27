@@ -29,20 +29,20 @@ def authCode():
     webbrowser.open_new_tab(url)
 
     try:
-        print("postthread")
+       # print("postthread")
         r = requests.get(url)
    
         r.raise_for_status()
-        print('\n\nStatus code ' + str(r.status_code ))
+        #print('\n\nStatus code ' + str(r.status_code ))
     except:
         print('unable to obtain authorization token')
-    print("count" +str(threading.active_count()))
+    #print("count" +str(threading.active_count()))
     while(threading.activeCount() >1):
         time.sleep(2)
     codeFile = open("Textfiles\\authCode.txt",'r')
     authenticationCode = codeFile.readline()
     codeFile.close()
-    print ("\ncode:" +authenticationCode)
+    #print ("\ncode:" +authenticationCode)
     #print("q" ,q)
     return authenticationCode
 
@@ -63,7 +63,7 @@ def loginProcess():
         userGraphInfo.id_token = access_token_json["id_token"]
 
         userGraphInfo.user_info_json = auth_helper.get_user_info_from_token(userGraphInfo.id_token)
-        print( "User Info" + json.dumps(userGraphInfo.user_info_json))
+        #print( "User Info" + json.dumps(userGraphInfo.user_info_json))
         return userGraphInfo
         #Register user now with the individual class
     except Exception as e:
