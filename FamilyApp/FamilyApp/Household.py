@@ -1,5 +1,5 @@
-import Individual
-import ShoppingList
+from Individual import Individual
+from ShoppingList import ShoppingList
 from projectoxford.speech import SpeechClient
 from projectoxford import audio
 from Speaker import speaker
@@ -12,7 +12,7 @@ class Household(object):
     def __init__(self):
         self.shoppingList = ShoppingList()
         self.dictionaryOfIndividuals = {}
-        self.houseSpeech = SpeechClient(key = _SPEECH_KEY, locale = 'en-US', gender='Male')
+        self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
         #houseSpeaker = spea
 
     def addInd(self, ind):

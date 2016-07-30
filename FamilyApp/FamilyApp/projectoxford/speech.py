@@ -16,7 +16,7 @@ import requests
 import time
 import uuid
 import sys
-
+import wave 
 import projectoxford.audio as audio
 
 _API_SCOPE = "https://speech.platform.bing.com"
@@ -302,7 +302,7 @@ class SpeechClient(object):
 
         return wav
 
-    def recognize(self, wav=None, locale=None, require_high_confidence=True):
+    def recognize(self, wav=None, locale=None, sec = 30, require_high_confidence=True):
         '''Converts a wave file to text. If no file is provided, the
         user's default microphone will record up to 30 seconds of
         audio. Returns a string containing the recognized text.
@@ -325,13 +325,19 @@ class SpeechClient(object):
         if not wav:
             if self.quiet_threshold is None:
                 self.calibrate_audio_recording()
+            wav = "Recordings/fromRecognize.wav"
+            fileOpen = wave.open(wav,'w')
+            fileOpen.setnchannels(1)
+            fileOpen.setsampwidth(2)
+            fileOpen.setframerate(16000)
             audio.play(_BEEP_WAV)
-            wav = audio.record(seconds=30, quiet_seconds=1, quiet_threshold=self.quiet_threshold)
+            audio.record(wav = fileOpen, seconds=sec, quiet_threshold=self.quiet_threshold, wait_for_sound = True)
+            print("Done from within the record function")
         res = self.recognize_raw(wav, locale)
         try:
             best = res['results'][0]
             if best['properties'].get('HIGHCONF'):
-                return best['name']
+                return best['name'], wav
             if best['properties'].get('MIDCONF') or best['properties'].get('LOWCONF'):
                 if require_high_confidence:
                     raise LowConfidenceError(best['name'])

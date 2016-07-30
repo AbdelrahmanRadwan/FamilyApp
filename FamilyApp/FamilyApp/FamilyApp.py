@@ -11,44 +11,48 @@ import wave
 
 
 myHome = Household()
-while(1):
-    inputName = input("Please enter your first name to begin. \n")
-    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
-    if res == 'y':
-        break
+#while(1):
+#    inputName = input("Please enter your first name to begin. \n")
+#    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
+#    if res == 'y':
+#        break
 
-person = Individual(myHome._SPEAKER_KEY, inputName)
-person.login()
+#person = Individual(speakerKey = myHome._SPEAKER_KEY,speechKey = myHome._SPEECH_KEY, name= inputName)
+#person.login()
 
-print("\nCreating profile.")
-person.createProfile()
-print("Profile created. " +person.speakerProfileID)
+#print("\nCreating profile.")
+#person.createProfile()
+#print("Profile created. " +person.speakerProfileID)
 
-print(person.graphInfo.user_info_json)
+#print(person.graphInfo.user_info_json)
 
-#print("Please remain quiet while I calibrate")
-#sp.calibrate_audio_recording()
-#print("Done calibrating")
+##print("Please remain quiet while I calibrate")
+##sp.calibrate_audio_recording()
+##print("Done calibrating")
 
-person.enroll()
+#person.enroll()
 
-if person.enrolled ==False :
-    print("Something went wrong with enrollment. Unenrolling Speaker.")
+#if person.enrolled ==False :
+#    print("Something went wrong with enrollment. Unenrolling Speaker.")
 
-speaker.print_all_profiles(myHome._SPEAKER_KEY)
-
+#speaker.print_all_profiles(myHome._SPEAKER_KEY)
+print("Please remain quiet while I calibrate")
+myHome.houseSpeech.calibrate_audio_recording()
+print("Done calibrating")
+myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
 print("Speak now")
 
-response, wavFile = myHome.houseSpeech.recognize(require_high_confidence = True)
-#wav = "Recordings/tester.wav"
-#fileOpen = wave.open(wav,'w')
+response, wavFile = myHome.houseSpeech.recognize(sec = 10, require_high_confidence = True)
+#wavFile = "Recordings/testing.wav"
+#fileOpen = wave.open(wavFile,'w')
 #fileOpen.setnchannels(1)
 #fileOpen.setsampwidth(2)
 #fileOpen.setframerate(16000)
-#audio.record(wav=fileOpen, seconds=13, wait_for_sound = True, quiet_threshold=sp.quiet_threshold)
+
+#audio.record(wav=fileOpen, seconds=10, wait_for_sound = True, quiet_threshold=myHome.houseSpeech.quiet_threshold)
 print("Done recording")
 
-helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(Individual._SPEAKER_KEY)
+helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
 listOfProfiles = helper.get_all_profiles()
 listOfIDs =[]
 for profiles in listOfProfiles:
@@ -56,7 +60,7 @@ for profiles in listOfProfiles:
 
 #print(listOfIDs)
 
-dd = speaker.identify_file(Individual._SPEAKER_KEY,wav, listOfIDs)
+dd = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
 print("Test" , dd)
 
 #r = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )

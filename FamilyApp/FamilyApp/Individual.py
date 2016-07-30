@@ -1,5 +1,6 @@
 from Authorize import authorise
 from Speaker import speaker
+from projectoxford.speech import SpeechClient
 from Speaker import EnrollmentResponse
 from projectoxford import speech
 from projectoxford import audio
@@ -21,10 +22,10 @@ class Individual(object):
         self.name = name
         self.graphInfo = graphInfo
         self.enrolled = False
-        self.reminders = Reminders()
-        self.todoList = Todo()
+        #self.reminders = Reminders()
+        #self.todoList = Todo()
 
-        personSpeech = SpeechClient(key = speechKey, locale = 'en-US', gender='Male')
+        self.personSpeech = SpeechClient(key = speechKey, locale = 'en-US', gender='Male')
 
     def createProfile(self):
         try:
@@ -67,7 +68,7 @@ class Individual(object):
                 #print("enrollRes type:" + type(enrollRes))
                 #print ( enrollRes.get_enrollment_status())
                 if enrollRes.get_enrollment_status() == Individual._SUCCESSFULL_ENROLLMENT :
-                    personSpeech.say(successfullMess)
+                    self.personSpeech.say(successfullMess)
                     self.enrolled = True
                     break
                 elif count==3 :
