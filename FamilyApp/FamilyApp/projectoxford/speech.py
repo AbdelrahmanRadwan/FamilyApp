@@ -325,14 +325,16 @@ class SpeechClient(object):
         if not wav:
             if self.quiet_threshold is None:
                 self.calibrate_audio_recording()
-            wav = "Recordings/fromRecognize.wav"
-            fileOpen = wave.open(wav,'w')
-            fileOpen.setnchannels(1)
-            fileOpen.setsampwidth(2)
-            fileOpen.setframerate(16000)
+            #wavPath = "Recordings/fromRecognize.wav"
+            #wav = wave.open(wavPath,'w')
+            #wav.setnchannels(1)
+            #wav.setsampwidth(2)
+            #wav.setframerate(16000)
             audio.play(_BEEP_WAV)
-            audio.record(wav = fileOpen, seconds=sec, quiet_threshold=self.quiet_threshold, wait_for_sound = True)
+            wav = audio.record(seconds=sec, quiet_threshold=self.quiet_threshold, wait_for_sound = True)
             print("Done from within the record function")
+            #wav.close()
+            #wavee = wave.open(wavPath, 'r')
         res = self.recognize_raw(wav, locale)
         try:
             best = res['results'][0]
@@ -395,7 +397,7 @@ class SpeechClient(object):
             data=wav,
             headers={
                 'Content-Type': content_type,
-                #'Accept': 'application/json;text/xml',
+                'Accept': 'application/json;text/xml',
                 'Authorization': 'Bearer ' + self._get_token(),
             },
         )

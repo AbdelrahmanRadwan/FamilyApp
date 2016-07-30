@@ -60,8 +60,8 @@ for profiles in listOfProfiles:
 
 #print(listOfIDs)
 
-dd = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
-print("Test" , dd)
+#dd = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
+#print("Test" , dd)
 
 #r = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )
 ##r = Event.newEvent(person.graphInfo.access_token, person.graphInfo.getAUD(),"Test Event", startDateTime=datetime.datetime(2016,7,26,18), endDateTime=datetime.datetime(2016,7,26,19),reminder = True)
