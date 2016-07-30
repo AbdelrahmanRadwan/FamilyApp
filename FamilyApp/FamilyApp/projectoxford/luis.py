@@ -1,19 +1,19 @@
-
+'''
 #-------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation 
 # All rights reserved. 
 # 
 # Distributed under the terms of the MIT License
 #-------------------------------------------------------------------------
-'''Project Oxford Language Understanding Intelligent Service (LUIS)
+Project Oxford Language Understanding Intelligent Service (LUIS)
 Module
 
 This module provides access to Project Oxford LUIS web services.
 
 See https://projectoxford.ai/luis to start using LUIS and create a
 deployed web service.
-'''
 
+'''
 import requests
 import time
 import urllib.parse as parse

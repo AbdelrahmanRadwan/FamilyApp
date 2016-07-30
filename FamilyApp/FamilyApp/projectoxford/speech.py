@@ -17,7 +17,7 @@ import time
 import uuid
 import sys
 
-import audio
+import projectoxford.audio as audio
 
 _API_SCOPE = "https://speech.platform.bing.com"
 
@@ -335,7 +335,7 @@ class SpeechClient(object):
             if best['properties'].get('MIDCONF') or best['properties'].get('LOWCONF'):
                 if require_high_confidence:
                     raise LowConfidenceError(best['name'])
-                return best['name']
+                return best['name'], wav
         except LookupError:
             pass
         raise ValueError('unable to recognize speech')

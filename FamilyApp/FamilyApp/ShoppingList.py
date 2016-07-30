@@ -4,13 +4,22 @@ class ShoppingList(object):
     def __init__(self):
         pass
 
-    def addItem(self, **itemList):
+    def addItems(self, **itemList):
         for items in itemList:
             shopping.append(items)
 
-    def deleteItem(self, **itemList):
+    def deleteItems(self, **itemList):
         for items in itemList:
             shopping.remove(shopping.index(items))
 
     def deleteList(self):
         del self
+
+        ######################################
+    def emailList(self, recipient):
+        pass
+        ######################################
+        ######################################
+    def listItems(self):
+        pass
+        ######################################

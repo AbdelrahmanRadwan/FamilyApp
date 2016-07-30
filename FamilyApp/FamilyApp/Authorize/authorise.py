@@ -5,8 +5,7 @@ import auth_helper,config
 import requests
 import webbrowser
 import server
-import threading  
-import queue 
+import threading   
 import json   
 from AuthInfo import GraphInfo              
 #from Graph.config import client_id, client_secret
@@ -17,7 +16,6 @@ redir = 'http://localhost:4321'
 
 def authCode():
 
-    q = queue.Queue()
 
     try:
         t= threading.Thread(target = server.flaskThread)
@@ -42,8 +40,7 @@ def authCode():
     codeFile = open("Textfiles\\authCode.txt",'r')
     authenticationCode = codeFile.readline()
     codeFile.close()
-    #print ("\ncode:" +authenticationCode)
-    #print("q" ,q)
+
     return authenticationCode
 
 def dummy():

@@ -34,3 +34,4 @@ See submodules for information about the available API sets.
 
 __author__ = "Microsoft Corporation <python@microsoft.com>"
 __version__ = "0.3.1"
+

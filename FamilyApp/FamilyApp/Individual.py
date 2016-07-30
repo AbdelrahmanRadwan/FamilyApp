@@ -5,25 +5,30 @@ from projectoxford import speech
 from projectoxford import audio
 import random
 import wave
-
-
+#import Todo
+import Reminders
 
 class Individual(object):
     """description of class"""
-    numOfIndividuals = 0
-    random.seed()
-    _SPEAKER_KEY = 'ac0e581a57e647e0a38afd0e51639a70'
-    _SUCCESSFULL_ENROLLMENT = "Enrolled"
-    sp = speech.SpeechClient(key = 'e7e321f984f24f5299c185e9f2658a3b', gender='Male')
 
-    def __init__(self, name, graphInfo = None):
+    random.seed()
+
+    _SUCCESSFULL_ENROLLMENT = "Enrolled"
+
+    def __init__(self,speakerKey, speechKey, name, graphInfo = None):
+        self.speakerKey = speakerKey
+        self.speechKey = speechKey
         self.name = name
         self.graphInfo = graphInfo
-        Individual.numOfIndividuals +=1
+        self.enrolled = False
+        self.reminders = Reminders()
+        self.todoList = Todo()
+
+        personSpeech = SpeechClient(key = speechKey, locale = 'en-US', gender='Male')
 
     def createProfile(self):
         try:
-            self.speakerProfileID = speaker.create_profile(Individual._SPEAKER_KEY,'EN-US')
+            self.speakerProfileID = speaker.create_profile(self.speakerKey,'EN-US')
             print("Profile created. " )
         except:
             print("Error creating the speaker user profile")
@@ -57,12 +62,13 @@ class Individual(object):
                 audio.record(wav=fileOpen,seconds=25,wait_for_sound=True)
                 print("\nDone recording")
                 audio.play("Recordings/waiting.wav")
-                enrollRes = speaker.enroll_profile(Individual._SPEAKER_KEY,self.speakerProfileID, wav)
+                enrollRes = speaker.enroll_profile(self.speakerKey,self.speakerProfileID, wav)
                 
                 #print("enrollRes type:" + type(enrollRes))
                 #print ( enrollRes.get_enrollment_status())
                 if enrollRes.get_enrollment_status() == Individual._SUCCESSFULL_ENROLLMENT :
-                    Individual.sp.say(successfullMess)
+                    personSpeech.say(successfullMess)
+                    self.enrolled = True
                     break
                 elif count==3 :
                     audio.play("Recordings/enrollFail.wav")

@@ -40,18 +40,22 @@
     <Compile Include="Graph\urls.py" />
     <Compile Include="Graph\views.py" />
     <Compile Include="Graph\__init__.py" />
+    <Compile Include="Household.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Individual.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="projectoxford\audio.py" />
+    <Compile Include="projectoxford\luis.py" />
+    <Compile Include="projectoxford\speech.py" />
+    <Compile Include="projectoxford\tests\__init__.py" />
+    <Compile Include="projectoxford\__init__.py" />
     <Compile Include="Speaker\EnrollmentResponse.py" />
     <Compile Include="Speaker\IdentificationProfile.py" />
     <Compile Include="Speaker\IdentificationResponse.py" />
     <Compile Include="Speaker\IdentificationServiceHttpClientHelper.py" />
     <Compile Include="Speaker\ProfileCreationResponse.py" />
-    <Compile Include="projectoxford\audio.py" />
-    <Compile Include="projectoxford\luis.py" />
-    <Compile Include="projectoxford\speech.py" />
-    <Compile Include="projectoxford\__init__.py" />
     <Compile Include="Reminders.py" />
     <Compile Include="ShoppingList.py">
       <SubType>Code</SubType>
@@ -70,15 +74,21 @@
   <ItemGroup>
     <Folder Include="Authorize\" />
     <Folder Include="Graph\" />
-    <Folder Include="Textfiles\" />
-    <Folder Include="Recordings\" />
-    <Folder Include="Speaker\" />
     <Folder Include="projectoxford\" />
     <Folder Include="projectoxford\tests\" />
     <Folder Include="projectoxford\tests\__pycache__\" />
+    <Folder Include="projectoxford\__pycache__\" />
+    <Folder Include="Textfiles\" />
+    <Folder Include="Recordings\" />
+    <Folder Include="Speaker\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="projectoxford\.speech.py.swp" />
     <Content Include="projectoxford\tests\__pycache__\__init__.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\audio.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\luis.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\speech.cpython-32.pyc" />
+    <Content Include="projectoxford\__pycache__\__init__.cpython-32.pyc" />
     <Content Include="Recordings\enrollFail.wav" />
     <Content Include="Recordings\enrollMess2.wav" />
     <Content Include="Recordings\enrollPrompt.wav" />

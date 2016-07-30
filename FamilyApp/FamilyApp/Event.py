@@ -10,6 +10,7 @@ graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 def newEvent(access_token,alias, title, startDateTime, endDateTime=None , location=None, companions=None, reminder = False , notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
+    
     # Set request headers.
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),
@@ -35,9 +36,10 @@ def newEvent(access_token,alias, title, startDateTime, endDateTime=None , locati
         return "{0}: {1}".format(r.status_code, r.text)
 
 
-def listEvents( alias):
-    list_events_url = graph_api_endpoint.format('/Users'+alias+'/calendar/events$top=5')
-
+def listEvents(access_token, alias):
+    list_events_url = graph_api_endpoint.format('/me/events')
+    print(list_events_url)
+    print(access_token)
     # Set request headers.
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),
@@ -46,15 +48,15 @@ def listEvents( alias):
     }
 
     r = requests.get(url = list_events_url, headers = headers)
-    if (response.status_code == requests.codes.accepted):
-        return response.status_code
+    if (r.status_code == requests.codes.accepted):
+        return r.status_code
         #r.json()
     else:
-        return "{0}: {1}".format(response.status_code, response.text)
+        return "{0}: {1}".format(r.status_code, r.text)
 
 
-def getEventDetailsByTitle( alias, title):
-    get_event_details_url = graph_api_endpoint.format('/Users'+alias+'/calendar/events$filter=substringof(subject,'+title+')')
+def getEventDetailsByTitle(access_token, alias, title):
+    get_event_details_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events$filter=substringof(subject,'+title+')')
         
     # Set request headers.
     headers = { 
@@ -71,8 +73,8 @@ def getEventDetailsByTitle( alias, title):
     else:
         return "{0}: {1}".format(response.status_code, response.text)
 
-def getEventDetailsByDate( alias, datetime):
-    get_event_details_url = graph_api_endpoint.format("/Users"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
+def getEventDetailsByDate(access_token, alias, datetime):
+    get_event_details_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
         
     # Set request headers.
     headers = { 
@@ -90,9 +92,9 @@ def getEventDetailsByDate( alias, datetime):
         return "{0}: {1}".format(response.status_code, response.text)
 
 
-def updateEvent( alias, **options):
+def updateEvent(access_token, alias, **options):
         #Function to identify event to be deleted using title
-    update_event_url = graph_api_endpoint.format("/Users"+alias+"/calendar/events/"+id)
+    update_event_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events/"+id)
 
     headers = {'Authorization' : 'Bearer {0}'.format(access_token)
                 }
@@ -115,10 +117,10 @@ def updateEvent( alias, **options):
         return "{0}: {1}".format(response.status_code, response.text)
 
 
-def delete( alias, title):
+def delete(access_token, alias, title):
 
     #Function to identify event to be deleted using title
-    delete_event_url = graph_api_endpoint.format("/Users"+alias+"/calendar/events/"+id)
+    delete_event_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events/"+id)
         
     # Set request headers.
     headers = { 
@@ -131,6 +133,6 @@ def delete( alias, title):
     else:
         return "{0}: {1}".format(response.status_code, response.text)
        
-def identifyEvent(alias, **options):
+#def identifyEvent(alias, **options):
 
-       get_event_details_url = graph_api_endpoint.format("/Users"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
+#       get_event_details_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")

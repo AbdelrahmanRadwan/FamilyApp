@@ -1,6 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
 
 # Client ID and secret.
+#client_id = '8961b824-a01d-408d-97e7-b30f85883ec2'
+#client_secret = 'hmAexWzYkU++rb5KOKT2ju9YnXhiTf2t8QuKb+lxgwg='
+
 client_id = 'a5bf5498-500b-40aa-aada-05c252e2bea0'
 client_secret = 'ZiQkaAMv02ihGA2S47LdTSs'
 
