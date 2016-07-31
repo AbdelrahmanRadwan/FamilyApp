@@ -17,16 +17,15 @@ def newEvent(access_token,alias, title, startDateTime, endDateTime=None , locati
     'Accept' : 'application/json',
     'Content-Type' : 'application/json'
     }
-    data = {"subject" : title,
-            "start" : {"@odata.type": {"dateTime" : str(startDateTime), "timeZone" : "Africa/Cairo"}},
-            "end" : {"@odata.type": {"dateTime" : str(endDateTime), "timeZone" : "Africa/Cairo"}},
-            "location" : location,
-            "attendees" : companions,
-            "isReminderOn" : reminder,
-            "reminderMinutesBeforeStart" : str(60)
+    data = {'subject' : title,
+            'start' : {'@odata.type': {'dateTime' : str(startDateTime), 'timeZone' : 'Africa/Cairo'}},
+            'end' : {'@odata.type': {'dateTime' : str(endDateTime), 'timeZone' : 'Africa/Cairo'}},
+            #'location' : location,
+            #'attendees' : companions,
+            'isReminderOn' : reminder,
+            'reminderMinutesBeforeStart' : str(60)
             }
 
-    #data = json.dumps(data)
     #print (type(data))
     #print (str(data))
     r = requests.post(url = new_event_url, data = json.dumps(data), headers = headers)
@@ -136,3 +135,50 @@ def delete(access_token, alias, title):
 #def identifyEvent(alias, **options):
 
 #       get_event_details_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
+
+def sendEmail(access_token, alias, emailAddress, subject, content):
+	# The resource URL for the sendMail action.
+  send_mail_url = graph_api_endpoint.format('/me/microsoft.graph.sendMail')	
+	# Set request headers.
+  headers = { 
+		'User-Agent' : 'python_tutorial/1.0',
+		'Authorization' : 'Bearer {0}'.format(access_token),
+		'Accept' : 'application/json',
+		'Content-Type' : 'application/json'
+	}						
+	# Use these headers to instrument calls. Makes it easier
+	# to correlate requests and responses in case of problems
+	# and is a recommended best practice.
+  request_id = str(uuid.uuid4())
+  instrumentation = { 
+		'client-request-id' : request_id,
+		'return-client-request-id' : 'true' 
+	}
+  headers.update(instrumentation)
+
+	# Create the email that is to be sent with API.
+  email = {
+		'Message': {
+			'Subject': subject,
+			'Body': {
+				'ContentType': 'HTML',
+				'Content': content
+			},
+			'ToRecipients': [
+				{
+					'EmailAddress': {
+						'Address': emailAddress
+					}
+				}
+			]
+		},
+		'SaveToSentItems': 'true'
+	}   
+
+  response = requests.post(url = send_mail_url, headers = headers, data = json.dumps(email), params = None)
+
+	# Check if the response is 202 (success) or not (failure).
+  if (response.status_code == requests.codes.accepted):
+    return response.status_code
+  else:
+    return "{0}: {1}".format(response.status_code, response.text)

@@ -3,7 +3,7 @@
 import requests
 import uuid
 import json
-from data import get_email_text
+
 
 # The base URL for the Microsoft Graph API.
 graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
@@ -34,7 +34,7 @@ def call_sendMail_endpoint(access_token, alias, emailAddress):
 			'Subject': 'Welcome to Office 365 development with Python and the Office 365 Connect sample',
 			'Body': {
 				'ContentType': 'HTML',
-				'Content': get_email_text(alias)
+				'Content': 'Test Content
 			},
 			'ToRecipients': [
 				{

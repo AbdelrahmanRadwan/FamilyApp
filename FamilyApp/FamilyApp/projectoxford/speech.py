@@ -333,13 +333,6 @@ class SpeechClient(object):
             #waveOut = wave.open(wavPath, 'r')
             audio.play(wav)
         res = self.recognize_raw(wav, locale)
-        #wavPath = "Recordings/fromRecognize.wav"
-        #waveIn = wave.open(wavPath,'wb')
-        #waveIn.setnchannels(1)
-        #waveIn.setsampwidth(2)
-        #waveIn.setframerate(16000)
-        #waveIn.writeframes(wav)
-        #waveIn.close()
 
         try:
             best = res['results'][0]
