@@ -6,8 +6,9 @@ import uuid
 # The base URL for the Microsoft Graph API.
 graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 
-#def dateTimeTimeZone(self, year, month, day, hour = 12, minute =0 , second = 0):
-
+def dateTimeTimeZone( year, month, day, hour = 12, minute =0 , second = 0):
+    st = str(datetime.date(year, month, day)) + "T" + str(datetime.time(hour, minute, second))
+    return st 
 
 def newEvent(access_token,alias, title, startDateTime, endDateTime=None , location=None, companions=None, reminder = False , notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
@@ -107,6 +108,7 @@ def updateEvent(access_token, alias, **options):
 
     headers = {'Authorization' : 'Bearer {0}'.format(access_token)
                 }
+    data = {}
 
     if options.get('title'):
         data ['subject'] = options['title']

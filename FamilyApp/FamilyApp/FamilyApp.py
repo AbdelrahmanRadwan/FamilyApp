@@ -2,7 +2,7 @@
 
 
 from Authorize import authorise  
-from projectoxford import speech, audio
+from projectoxford import speech, audio 
 from Household import Household
 from Individual import Individual
 import Event
@@ -12,74 +12,84 @@ import datetime
 
 
 myHome = Household()
-while(1):
-    inputName = input("Please enter your first name to begin. \n")
-    res = input(inputName + ", is this the name you wanted? [y/n]\n" )
-    if res == 'y':
-        break
 
-person = Individual(speakerKey = myHome._SPEAKER_KEY,speechKey = myHome._SPEECH_KEY, name= inputName)
-person.login()
+def houseHoldEnrollmentProcess():
+    while (1):
+        while(1):
+            inputName = input("Please enter your first name to begin. \n")
+            res = input(inputName + ", is this the name you wanted? [y/n]\n" )
+            if res == 'y':
+                break
 
-#content = "Content of the email that should be sent."
-#r = Event.sendEmail(person.graphInfo.access_token, person.graphInfo.getTID, 'aliahassan95@aucegypt.edu','Tester Email', content)
-#print(r)
+        person = Individual(speakerKey = myHome._SPEAKER_KEY,speechClient = myHome.houseSpeech, name= inputName)
+        person.login()
 
-#print("\nCreating profile.")
-#person.createProfile()
-#print("Profile created. " +person.speakerProfileID)
+        print("\nCreating profile.")
+        person.createProfile()
+        print("Profile created. " +person.speakerProfileID)
 
-#print(person.graphInfo.user_info_json)
+        #print(person.graphInfo.user_info_json)
 
-#person.enroll()
+        print("Please remain quiet while I calibrate")
+        myHome.houseSpeech.calibrate_audio_recording()
+        print("Done calibrating")
+        myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
 
-#if person.enrolled ==False :
-#    print("Something went wrong with enrollment. Unenrolling Speaker.")
+        person.enroll()
 
-#speaker.print_all_profiles(myHome._SPEAKER_KEY)
+        if person.enrolled ==False :
+            print("Something went wrong with enrollment. Unenrolling Speaker.")
 
-#print("Please remain quiet while I calibrate")
-#myHome.houseSpeech.calibrate_audio_recording()
-#print("Done calibrating")
-#myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
-#print("Speak now")
+        speaker.print_all_profiles(myHome._SPEAKER_KEY)
+        audio.play("Recordings/enrollPrompt.wav")
+        response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
+        if response.lower().find("yes")==-1 :
+            break
 
-#wavFile = "Recordings/speakerCheck.wav"
-#fileOpen = wave.open(wavFile,'w')
-#fileOpen.setnchannels(1)
-#fileOpen.setsampwidth(2)
-#fileOpen.setframerate(16000)
-#audio.record(wav=fileOpen, seconds=10, wait_for_sound = True, quiet_threshold=myHome.houseSpeech.quiet_threshold)
-#print("Done recording")
-#fileOpen.close()
+def checkingEnrollment():
 
-#waveRead = open(wavFile, 'rb')
-##ww = waveRead.readframes(waveRead._nframes)
-##opened = wave.open( ww, 'r')
-#response = myHome.houseSpeech.recognize(sec = 10, require_high_confidence = True, wav = waveRead.read())
-#print ("response" + response)
+    audio.play("Recordings/checkingEnrollment.wav")
 
-#helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
-#listOfProfiles = helper.get_all_profiles()
-#listOfIDs =[]
-#for profiles in listOfProfiles:
-#    listOfIDs.append(profiles.get_profile_id())
+    wavFile = "Recordings/speakerCheck.wav"
+    fileOpen = wave.open(wavFile,'w')
+    fileOpen.setnchannels(1)
+    fileOpen.setsampwidth(2)
+    fileOpen.setframerate(16000)
+    audio.play(speech._BEEP_WAV)
+    audio.record(wav=fileOpen, seconds=10, wait_for_sound = True, quiet_threshold=myHome.houseSpeech.quiet_threshold)
+    print("Done recording")
+    fileOpen.close()
 
-##print(listOfIDs)
+    waveRead = open(wavFile, 'rb')
+    response = myHome.houseSpeech.recognize(sec = 10, require_high_confidence = True, wav = waveRead.read())
+    print ("response" + response)
 
-#dd = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
-#print("Test" , dd)
+    helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
+    listOfProfiles = helper.get_all_profiles()
+    listOfIDs =[]
+    for profiles in listOfProfiles:
+        listOfIDs.append(profiles.get_profile_id())
+
+    #print(listOfIDs)
+    iden = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
+    print("Test" , iden)
 
 
 #one = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )
 #print(one)
 
-two = Event.newEvent(person.graphInfo.access_token, 't-alhass@microsoft.com' ,"Test Event", startDateTime=datetime.datetime(2016,7,26,18), endDateTime=datetime.datetime(2016,7,26,19),reminder = True)
+startdatetime = Event.dateTimeTimeZone(2016,8,1,13,30,0)
+enddatetime = Event.dateTimeTimeZone(2016,8,1,14,30,0)
+
+two = Event.newEvent(person.graphInfo.access_token, 't-alhass@microsoft.com' ,"Test Event", startDateTime=startdatetime, endDateTime=enddatetime,reminder = True)
 print(two)
 
 #three = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )
 #print(three)
 
+#content = "Content of the email that should be sent."
+#r = Event.sendEmail(person.graphInfo.access_token, person.graphInfo.getTID, 'aliahassan95@aucegypt.edu','Tester Email', content)
+#print(r)
 
 #token = r.json()
 

@@ -16,16 +16,16 @@ class Individual(object):
 
     _SUCCESSFULL_ENROLLMENT = "Enrolled"
 
-    def __init__(self,speakerKey, speechKey, name, graphInfo = None):
+    def __init__(self,speakerKey, speechClient, name, graphInfo = None):
         self.speakerKey = speakerKey
-        self.speechKey = speechKey
+        self.personSpeech = speechClient
         self.name = name
         self.graphInfo = graphInfo
         self.enrolled = False
         #self.reminders = Reminders()
         #self.todoList = Todo()
 
-        self.personSpeech = SpeechClient(key = speechKey, locale = 'en-US', gender='Male')
+        #self.personSpeech = SpeechClient(key = speechKey, locale = 'en-US', gender='Male')
 
     def createProfile(self):
         try:
@@ -59,8 +59,10 @@ class Individual(object):
                 fileOpen.setnchannels(1)
                 fileOpen.setsampwidth(2)
                 fileOpen.setframerate(16000)
+
                 print("\nRecording")
-                audio.record(wav=fileOpen,seconds=25,wait_for_sound=True)
+                ######### Here is where the recording should wait for the speech to end 
+                audio.record(wav=fileOpen,wait_for_sound=True)
                 print("\nDone recording")
                 audio.play("Recordings/waiting.wav")
                 enrollRes = speaker.enroll_profile(self.speakerKey,self.speakerProfileID, wav)
