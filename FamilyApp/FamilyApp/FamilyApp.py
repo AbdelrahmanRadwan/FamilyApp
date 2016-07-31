@@ -42,15 +42,18 @@ print("Done calibrating")
 myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
 print("Speak now")
 
-response, wavFile = myHome.houseSpeech.recognize(sec = 10, require_high_confidence = True)
-#wavFile = "Recordings/testing.wav"
-#fileOpen = wave.open(wavFile,'w')
-#fileOpen.setnchannels(1)
-#fileOpen.setsampwidth(2)
-#fileOpen.setframerate(16000)
 
-#audio.record(wav=fileOpen, seconds=10, wait_for_sound = True, quiet_threshold=myHome.houseSpeech.quiet_threshold)
+wavFile = "Recordings/speakerCheck.wav"
+fileOpen = wave.open(wavFile,'w')
+fileOpen.setnchannels(1)
+fileOpen.setsampwidth(2)
+fileOpen.setframerate(16000)
+audio.record(wav=fileOpen, seconds=10, wait_for_sound = True, quiet_threshold=myHome.houseSpeech.quiet_threshold)
 print("Done recording")
+fileOpen.close()
+
+waveRead = wave.open(wavFile, 'r')
+response = myHome.houseSpeech.recognize(sec = 10, require_high_confidence = True, wav = waveRead)
 
 helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
 listOfProfiles = helper.get_all_profiles()
@@ -60,8 +63,8 @@ for profiles in listOfProfiles:
 
 #print(listOfIDs)
 
-#dd = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
-#print("Test" , dd)
+dd = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
+print("Test" , dd)
 
 #r = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )
 ##r = Event.newEvent(person.graphInfo.access_token, person.graphInfo.getAUD(),"Test Event", startDateTime=datetime.datetime(2016,7,26,18), endDateTime=datetime.datetime(2016,7,26,19),reminder = True)

@@ -342,7 +342,7 @@ class _RecordStatus(object):
 def record(
     wav=None,
     channels=1,
-    sample_rate=11025,
+    sample_rate=16000,
     bits_per_sample=8,
     seconds=-1,
     quiet_seconds=1,

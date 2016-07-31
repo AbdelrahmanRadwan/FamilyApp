@@ -41,6 +41,7 @@ import EnrollmentResponse
 import ProfileCreationResponse
 import logging
 
+
 class IdentificationServiceHttpClientHelper:
     """Abstracts the interaction with the Identification service."""
 
@@ -201,6 +202,7 @@ class IdentificationServiceHttpClientHelper:
         except:
             logging.error('Error identifying file.')
             raise  
+
 
     def _poll_operation(self, operation_url):
         """Polls on an operation till it is done

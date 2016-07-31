@@ -325,25 +325,30 @@ class SpeechClient(object):
         if not wav:
             if self.quiet_threshold is None:
                 self.calibrate_audio_recording()
-            #wavPath = "Recordings/fromRecognize.wav"
-            #wav = wave.open(wavPath,'w')
-            #wav.setnchannels(1)
-            #wav.setsampwidth(2)
-            #wav.setframerate(16000)
+           
             audio.play(_BEEP_WAV)
             wav = audio.record(seconds=sec, quiet_threshold=self.quiet_threshold, wait_for_sound = True)
             print("Done from within the record function")
-            #wav.close()
-            #wavee = wave.open(wavPath, 'r')
+            #waveIn.close()
+            #waveOut = wave.open(wavPath, 'r')
+            audio.play(wav)
         res = self.recognize_raw(wav, locale)
+        #wavPath = "Recordings/fromRecognize.wav"
+        #waveIn = wave.open(wavPath,'wb')
+        #waveIn.setnchannels(1)
+        #waveIn.setsampwidth(2)
+        #waveIn.setframerate(16000)
+        #waveIn.writeframes(wav)
+        #waveIn.close()
+
         try:
             best = res['results'][0]
             if best['properties'].get('HIGHCONF'):
-                return best['name'], wav
+                return best['name']
             if best['properties'].get('MIDCONF') or best['properties'].get('LOWCONF'):
                 if require_high_confidence:
                     raise LowConfidenceError(best['name'])
-                return best['name'], wav
+                return best['name']
         except LookupError:
             pass
         raise ValueError('unable to recognize speech')
