@@ -6,29 +6,39 @@ import uuid
 # The base URL for the Microsoft Graph API.
 graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 
+#def dateTimeTimeZone(self, year, month, day, hour = 12, minute =0 , second = 0):
+
 
 def newEvent(access_token,alias, title, startDateTime, endDateTime=None , location=None, companions=None, reminder = False , notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
-    
+    print( "\n" +access_token)
+
+    print ("\n" + new_event_url) 
     # Set request headers.
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),
     'Accept' : 'application/json',
     'Content-Type' : 'application/json'
     }
-    data = {'subject' : title,
-            'start' : {'@odata.type': {'dateTime' : str(startDateTime), 'timeZone' : 'Africa/Cairo'}},
-            'end' : {'@odata.type': {'dateTime' : str(endDateTime), 'timeZone' : 'Africa/Cairo'}},
+    data = {
+            'subject' : title,
+            'start' : {'dateTime' : startDateTime, 'timeZone' : 'Africa/Cairo'},
+            'end' : {'dateTime' : endDateTime, 'timeZone' : 'Africa/Cairo'},
+            #'originalEndTimeZone' : 'Africa/Cairo',
+            #'originalStartTimeZone' : 'Africa/Cairo',
+            #'responseStatus': {'response': 'Accepted', 'time': '2016-08-03T08:16:00Z'},
+            'iCalUId': str(uuid.uuid4()),
             #'location' : location,
             #'attendees' : companions,
             'isReminderOn' : reminder,
-            'reminderMinutesBeforeStart' : str(60)
+            'reminderMinutesBeforeStart' : 60
             }
 
     #print (type(data))
     #print (str(data))
-    r = requests.post(url = new_event_url, data = json.dumps(data), headers = headers)
+    print (data)
+    r = requests.post(url = new_event_url, json = data, headers = headers)
     if (r.status_code == requests.codes.accepted):
         return r.status_code
     else:

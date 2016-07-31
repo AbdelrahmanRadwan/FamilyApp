@@ -34,7 +34,7 @@ def call_sendMail_endpoint(access_token, alias, emailAddress):
 			'Subject': 'Welcome to Office 365 development with Python and the Office 365 Connect sample',
 			'Body': {
 				'ContentType': 'HTML',
-				'Content': 'Test Content
+				'Content': 'Test Content'
 			},
 			'ToRecipients': [
 				{
