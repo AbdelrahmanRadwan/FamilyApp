@@ -73,6 +73,8 @@ def checkingEnrollment():
         #print(listOfIDs)
         iden = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
         print("Identified: " , iden)
+        print("User: " , myHome.dictOfSpeakerIDtoName[iden.get_identified_profile_id()])
+
         audio.play("Recordings/checkEnrollPrompt.wav")
         response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
         if response.lower().find("yes")==-1 :
@@ -100,8 +102,8 @@ def graphInteraction():
 
 
 
-houseHoldEnrollmentProcess()
+#houseHoldEnrollmentProcess()
 
-#checkingEnrollment()
+checkingEnrollment()
 
-graphInteraction()
+#graphInteraction()

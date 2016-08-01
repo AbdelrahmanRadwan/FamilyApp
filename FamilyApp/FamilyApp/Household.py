@@ -3,6 +3,7 @@ from ShoppingList import ShoppingList
 from projectoxford.speech import SpeechClient
 from projectoxford import audio
 from Speaker import speaker
+import pickle
 
 class Household(object):
 
@@ -13,13 +14,15 @@ class Household(object):
         self.shoppingList = ShoppingList()
         self.dictionaryOfIndividuals = {}
         self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
-        #houseSpeaker = spea
+        self.dictOfSpeakerIDtoName = {}
 
     def addInd(self, ind):
         self.dictionaryOfIndividuals[ind.name] = ind
+        self.dictOfSpeakerIDtoName[ind.speakerProfileID] = ind.name
 
     def removeInd(self, name):
         del self.dictionaryOfIndividuals[name]
+        del  self.dictOfSpeakerIDtoName[ind.speakerProfileID]
 
     def addToShopping(self, items):
         self.shoppingList.addItems(items)
