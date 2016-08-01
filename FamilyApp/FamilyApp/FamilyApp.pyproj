@@ -74,6 +74,7 @@
   <ItemGroup>
     <Folder Include="Authorize\" />
     <Folder Include="Graph\" />
+    <Folder Include="SavedFiles\" />
     <Folder Include="projectoxford\" />
     <Folder Include="projectoxford\tests\" />
     <Folder Include="projectoxford\tests\__pycache__\" />
@@ -94,6 +95,7 @@
     <Content Include="Recordings\enrollFail.wav" />
     <Content Include="Recordings\enrollMess2.wav" />
     <Content Include="Recordings\enrollPrompt.wav" />
+    <Content Include="Recordings\firstEnrollPrompt.wav" />
     <Content Include="Recordings\howmayihelp.wav" />
     <Content Include="Recordings\repeatEnroll.wav" />
     <Content Include="Recordings\waiting.wav" />

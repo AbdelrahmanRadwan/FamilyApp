@@ -4,6 +4,7 @@ from projectoxford.speech import SpeechClient
 from projectoxford import audio
 from Speaker import speaker
 import pickle
+import os
 
 class Household(object):
 
@@ -12,9 +13,15 @@ class Household(object):
 
     def __init__(self):
         self.shoppingList = ShoppingList()
-        self.dictionaryOfIndividuals = {}
+        if os.path.exists("SavedFiles/Individuals.p") and os.path.getsize("SavedFiles/Individuals.p") > 0:
+            self.dictionaryOfIndividuals = pickle.load(open("SavedFiles/Individuals.p",'rb'))
+        else:
+            self.dictionaryOfIndividuals = {}
         self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
-        self.dictOfSpeakerIDtoName = {}
+        if os.path.exists("SavedFiles/IDtoName.p") and os.path.getsize("SavedFiles/IDtoName.p") > 0:
+            self.dictOfSpeakerIDtoName =  pickle.load(open("SavedFiles/IDtoName.p", 'rb'))
+        else:
+            self.dictOfSpeakerIDtoName = {}
 
     def addInd(self, ind):
         self.dictionaryOfIndividuals[ind.name] = ind
@@ -30,4 +37,6 @@ class Household(object):
     def removeFromShopping(self, items):
         self.shoppingLIst.deleteItems(items)
 
-
+    def finishing(self):
+        pickle.dump(self.dictionaryOfIndividuals,open("SavedFiles/Individuals.txt",'wb'))
+        pickle.dump(self.dictOfSpeakerIDtoName, open("SavedFiles/IDtoName.txt", 'wb'))

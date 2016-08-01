@@ -12,7 +12,16 @@ import datetime
 myHome = Household()
 
 def houseHoldEnrollmentProcess():
+    firstloop = True
     while (1):
+        
+        if firstloop ==True:
+            firstloop= False
+            audio.play("Recordings/firstEnrollPrompt.wav")
+            response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
+            if response.lower().find("yes")==-1 :
+                break
+
         while(1):
             inputName = input("Please enter your first name to begin. \n")
             res = input(inputName + ", is this the name you wanted? [y/n]\n" )
@@ -22,24 +31,26 @@ def houseHoldEnrollmentProcess():
         person = Individual(speakerKey = myHome._SPEAKER_KEY,speechClient = myHome.houseSpeech, name= inputName)
         person.login()
 
-        myHome.addInd(person)
-        #print("\nCreating profile.")
-        #person.createProfile()
-        #print("Profile created. " +person.speakerProfileID)
+        
+        print("\nCreating profile.")
+        person.createProfile()
+        print("Profile created. " +person.speakerProfileID)
 
-        ##print(person.graphInfo.user_info_json)
+        #print(person.graphInfo.user_info_json)
 
-        #print("Please remain quiet while I calibrate")
-        #myHome.houseSpeech.calibrate_audio_recording()
-        #print("Done calibrating")
-        #myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
+        print("Please remain quiet while I calibrate")
+        myHome.houseSpeech.calibrate_audio_recording()
+        print("Done calibrating")
+        myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
 
-        #person.enroll()
+        person.enroll()
 
-        #if person.enrolled ==False :
-        #    print("Something went wrong with enrollment. Unenrolling Speaker.")
+        if person.enrolled ==False :
+            print("Something went wrong with enrollment. Unenrolling Speaker.")
+        else:
+            myHome.addInd(person)
 
-        #speaker.print_all_profiles(myHome._SPEAKER_KEY)
+        speaker.print_all_profiles(myHome._SPEAKER_KEY)
         audio.play("Recordings/enrollPrompt.wav")
         response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
         if response.lower().find("yes")==-1 :
@@ -73,7 +84,10 @@ def checkingEnrollment():
         #print(listOfIDs)
         iden = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
         print("Identified: " , iden)
-        print("User: " , myHome.dictOfSpeakerIDtoName[iden.get_identified_profile_id()])
+        if (myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id()))!= None :
+            print("User: " , myHome.dictOfSpeakerIDtoName[iden.get_identified_profile_id()])
+        else: 
+            print("User currently not enrolled.")
 
         audio.play("Recordings/checkEnrollPrompt.wav")
         response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
@@ -98,12 +112,16 @@ def graphInteraction():
     r = Event.sendEmail(myHome.dictionaryOfIndividuals["Alia"].graphInfo.access_token,'t-alhass@microsoft.com', 'aliahassan95@aucegypt.edu','Tester Email', content)
     print(r)
 
+
 #token = r.json()
 
 
 
-#houseHoldEnrollmentProcess()
+houseHoldEnrollmentProcess()
+
+myHome.finishing()
 
 checkingEnrollment()
 
-#graphInteraction()
+graphInteraction()
+
