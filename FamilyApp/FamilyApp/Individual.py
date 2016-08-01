@@ -53,7 +53,9 @@ class Individual(object):
             while(count<3):
                 count+=1
                 #Print the text that should be spoken to enroll
-                print(speaker.enrollmentExcerpts[random.randint(0,len(speaker.enrollmentExcerpts)-1)])
+                ran = random.randint(0,len(speaker.enrollmentExcerpts)-1)
+                print(speaker.enrollmentExcerpts[ran].keys())
+                print(speaker.enrollmentExcerpts[ran].values())
                 wav = "Recordings/"+self.name+str(count)+".wav"
                 fileOpen = wave.open(wav,'w')
                 fileOpen.setnchannels(1)
@@ -62,7 +64,7 @@ class Individual(object):
 
                 print("\nRecording")
                 ######### Here is where the recording should wait for the speech to end 
-                audio.record(wav=fileOpen,wait_for_sound=True)
+                audio.record(wav=fileOpen,wait_for_sound=True, quiet_seconds = 5, seconds = 35)
                 print("\nDone recording")
                 audio.play("Recordings/waiting.wav")
                 enrollRes = speaker.enroll_profile(self.speakerKey,self.speakerProfileID, wav)

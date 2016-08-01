@@ -89,6 +89,7 @@
     <Content Include="projectoxford\__pycache__\luis.cpython-32.pyc" />
     <Content Include="projectoxford\__pycache__\speech.cpython-32.pyc" />
     <Content Include="projectoxford\__pycache__\__init__.cpython-32.pyc" />
+    <Content Include="Recordings\checkEnrollPrompt.wav" />
     <Content Include="Recordings\checkingEnrollment.wav" />
     <Content Include="Recordings\enrollFail.wav" />
     <Content Include="Recordings\enrollMess2.wav" />

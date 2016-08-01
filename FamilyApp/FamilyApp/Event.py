@@ -13,9 +13,9 @@ def dateTimeTimeZone( year, month, day, hour = 12, minute =0 , second = 0):
 def newEvent(access_token,alias, title, startDateTime, endDateTime=None , location=None, companions=None, reminder = False , notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
-    print( "\n" +access_token)
+    #print( "\n" +access_token)
 
-    print ("\n" + new_event_url) 
+    #print ("\n" + new_event_url) 
     # Set request headers.
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),
@@ -38,7 +38,7 @@ def newEvent(access_token,alias, title, startDateTime, endDateTime=None , locati
 
     #print (type(data))
     #print (str(data))
-    print (data)
+    #print (data)
     r = requests.post(url = new_event_url, json = data, headers = headers)
     if (r.status_code == requests.codes.accepted):
         return r.status_code
@@ -48,8 +48,8 @@ def newEvent(access_token,alias, title, startDateTime, endDateTime=None , locati
 
 def listEvents(access_token, alias):
     list_events_url = graph_api_endpoint.format('/me/events')
-    print(list_events_url)
-    print(access_token)
+    #print(list_events_url)
+    #print(access_token)
     # Set request headers.
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),

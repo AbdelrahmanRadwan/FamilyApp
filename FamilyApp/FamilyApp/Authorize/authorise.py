@@ -70,27 +70,27 @@ def loginProcess():
 def receiveAuth():
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     add = (socket.gethostname(), 4321)
-    print (sys.stderr, 'starting up on %s port %s' %add)
+    #print (sys.stderr, 'starting up on %s port %s' %add)
     sock.bind(add)
 
     sock.listen(1)
 
     while True:
         # Wait for a connection
-        print (sys.stderr, 'waiting for a connection')
+        #print (sys.stderr, 'waiting for a connection')
         connection, client_address = sock.accept()
-        print("\naddress" + client_address)
+        #print("\naddress" + client_address)
     try:
-            print (sys.stderr, 'connection from', client_address)
+            #print (sys.stderr, 'connection from', client_address)
 
             # Receive the data in small chunks and retransmit it
             while True:
                 data = data + connection.recv(16)
-                print (sys.stderr, 'received "%s"' % data)
+                #print (sys.stderr, 'received "%s"' % data)
                 if data:
                     return data
                 else:
-                    print (sys.stderr, 'no more data from', client_address)
+                    #print (sys.stderr, 'no more data from', client_address)
                     break
     finally:
             # Clean up the connection

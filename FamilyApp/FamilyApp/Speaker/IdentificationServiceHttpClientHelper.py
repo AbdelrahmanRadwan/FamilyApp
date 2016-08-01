@@ -133,7 +133,7 @@ class IdentificationServiceHttpClientHelper:
             request_url = '{0}/{1}/enroll'.format(
                 self._IDENTIFICATION_PROFILES_URI,
                 urllib.parse.quote(profile_id))
-            print(request_url);
+            #print(request_url);
 
             # Prepare the body of the message
             with open(file_path, 'rb') as body:

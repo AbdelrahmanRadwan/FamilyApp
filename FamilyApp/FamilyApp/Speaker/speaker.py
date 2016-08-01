@@ -53,7 +53,7 @@ def create_profile(subscription_key, locale):
         subscription_key)
 
     creation_response = helper.create_profile(locale)
-    print(creation_response.get_profile_id())
+    print("\nProfile ID" + creation_response.get_profile_id())
     return creation_response.get_profile_id()
 
 
