@@ -9,6 +9,7 @@ from Speaker import speaker, IdentificationServiceHttpClientHelper
 import wave
 import datetime
 
+myHome = Household()
 
 def houseHoldEnrollmentProcess():
     while (1):
@@ -21,23 +22,24 @@ def houseHoldEnrollmentProcess():
         person = Individual(speakerKey = myHome._SPEAKER_KEY,speechClient = myHome.houseSpeech, name= inputName)
         person.login()
 
-        print("\nCreating profile.")
-        person.createProfile()
-        print("Profile created. " +person.speakerProfileID)
+        myHome.addInd(person)
+        #print("\nCreating profile.")
+        #person.createProfile()
+        #print("Profile created. " +person.speakerProfileID)
 
-        #print(person.graphInfo.user_info_json)
+        ##print(person.graphInfo.user_info_json)
 
-        print("Please remain quiet while I calibrate")
-        myHome.houseSpeech.calibrate_audio_recording()
-        print("Done calibrating")
-        myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
+        #print("Please remain quiet while I calibrate")
+        #myHome.houseSpeech.calibrate_audio_recording()
+        #print("Done calibrating")
+        #myHome.houseSpeech.quiet_threshold = myHome.houseSpeech.quiet_threshold*1.1
 
-        person.enroll()
+        #person.enroll()
 
-        if person.enrolled ==False :
-            print("Something went wrong with enrollment. Unenrolling Speaker.")
+        #if person.enrolled ==False :
+        #    print("Something went wrong with enrollment. Unenrolling Speaker.")
 
-        speaker.print_all_profiles(myHome._SPEAKER_KEY)
+        #speaker.print_all_profiles(myHome._SPEAKER_KEY)
         audio.play("Recordings/enrollPrompt.wav")
         response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
         if response.lower().find("yes")==-1 :
@@ -78,28 +80,28 @@ def checkingEnrollment():
 
 
 def graphInteraction():
-    one = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )
+    one = Event.listEvents(myHome.dictionaryOfIndividuals["Alia"].graphInfo.access_token, 't-alhass@microsoft.com' )
     print(one)
 
     startdatetime = Event.dateTimeTimeZone(2016,8,1,13,30,0)
     enddatetime = Event.dateTimeTimeZone(2016,8,1,14,30,0)
 
-    two = Event.newEvent(person.graphInfo.access_token, 't-alhass@microsoft.com' ,"Test Event", startDateTime=startdatetime, endDateTime=enddatetime,reminder = True)
+    two = Event.newEvent(myHome.dictionaryOfIndividuals["Alia"].graphInfo.access_token, 't-alhass@microsoft.com' ,"Test Event", startDateTime=startdatetime, endDateTime=enddatetime,reminder = True)
     print(two)
 
-    three = Event.listEvents(person.graphInfo.access_token, person.graphInfo.getTID() )
+    three = Event.listEvents(myHome.dictionaryOfIndividuals["Alia"].graphInfo.access_token, 't-alhass@microsoft.com' )
     print(three)
 
     content = "Content of the email that should be sent."
-    r = Event.sendEmail(person.graphInfo.access_token, person.graphInfo.getTID, 'aliahassan95@aucegypt.edu','Tester Email', content)
+    r = Event.sendEmail(myHome.dictionaryOfIndividuals["Alia"].graphInfo.access_token,'t-alhass@microsoft.com', 'aliahassan95@aucegypt.edu','Tester Email', content)
     print(r)
 
 #token = r.json()
 
-myHome = Household()
 
-#houseHoldEnrollmentProcess()
 
-checkingEnrollment()
+houseHoldEnrollmentProcess()
+
+#checkingEnrollment()
 
 graphInteraction()

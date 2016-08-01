@@ -16,15 +16,15 @@ class Household(object):
         #houseSpeaker = spea
 
     def addInd(self, ind):
-        dictionaryofIndividuals[ind.name] = ind
+        self.dictionaryOfIndividuals[ind.name] = ind
 
     def removeInd(self, name):
-        del dictionaryOfIndividuals[name]
+        del self.dictionaryOfIndividuals[name]
 
     def addToShopping(self, items):
-        shoppingList.addItems(items)
+        self.shoppingList.addItems(items)
 
     def removeFromShopping(self, items):
-        shoppingLIst.deleteItems(items)
+        self.shoppingLIst.deleteItems(items)
 
 
