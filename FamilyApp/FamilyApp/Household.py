@@ -17,20 +17,20 @@ class Household(object):
     def __init__(self):
         self.shoppingList = ShoppingList()
         if os.path.exists(Household._IND_FILEPATH) and os.path.getsize(Household._IND_FILEPATH) > 0:
-            indFileRead = open(Household._IND_FILEPATH, 'r', encoding = 'utf8')
-            self.dictionaryOfIndividuals = json.loads(indFileRead.readlines())
+            indFileRead = open(Household._IND_FILEPATH, 'rb')
+            self.dictionaryOfIndividuals = pickle.load(indFileRead)
             indFileRead.close()
         else:
             self.dictionaryOfIndividuals = {}
 
         self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
         if os.path.exists(Household._IDTONAME_FILEPATH) and os.path.getsize(Household._IDTONAME_FILEPATH) > 0:
-            idFileRead = open(Household._IDTONAME_FILEPATH,'r', encoding = 'utf8')
-            self.dictionaryOfSpeakerIDtoName = json.loads(idFileRead.readlines())
+            idFileRead = open(Household._IDTONAME_FILEPATH,'rb')
+            self.dictionaryOfSpeakerIDtoName = pickle.load(idFileRead)
             idFileRead.close()
         else:
             self.dictionaryOfSpeakerIDtoName = {}
-        self.dictionaryOfSpeakerIDtoName['b33e073a-5c8f-4e7d-9579-71751de1ebd4'] = 'Carol'
+        
 
 
     def addInd(self, ind):
@@ -49,18 +49,18 @@ class Household(object):
 
     def finishing(self):
         try:
-            indFileWrite =  open(Household._IND_FILEPATH, 'w', encoding = 'utf8')
+            indFileWrite =  open(Household._IND_FILEPATH, 'wb')
             #for inds in self.dictionaryOfIndividuals :
-            pickle.dumps(self.dictionaryOfIndividuals, pickle.HIGHEST_PROTOCOL)
-            indFileWrite.writelines(json.dumps(self.dictionaryOfIndividuals))
+            
+            pickle.dump(self.dictionaryOfIndividuals,indFileWrite, pickle.HIGHEST_PROTOCOL)
             indFileWrite.close()
         except:
             print("Couldn't write individual json's to file")
 
         try:
-            idFileWrite =  open(Household._IDTONAME_FILEPATH, 'w', encoding = 'utf8')
+            idFileWrite =  open(Household._IDTONAME_FILEPATH, 'wb')
             #for ids in self.dictionaryOfSpeakerIDtoName :
-            idFileWrite.writelines(json.dumps(self.dictionaryOfSpeakerIDtoName))
+            pickle.dump(self.dictionaryOfSpeakerIDtoName,idFileWrite, pickle.HIGHEST_PROTOCOL)
             idFileWrite.close()
         except:
             print("Couldn't write id json's to file")
