@@ -1,13 +1,15 @@
 class GraphInfo(object):
     """description of class"""
 
-    def __init__(self,auth_code=None,expires_in=None,access_token=None,refresh_token=None,scope=None,id_token=None, user_info_json=None):
+    def __init__(self,auth_code=None,expires_in=None,access_token=None,refresh_token=None,scope=None,id_token=None, id = None, userPrincipalName = None, user_info_json=None):
         self.auth_code = auth_code
         self.expires_in = expires_in
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.scope = scope
         self.id_token = id_token
+        self.id = id
+        self.userPrincipalName = userPrincipalName
         self.user_info_json = user_info_json
 
     def getISS(self):

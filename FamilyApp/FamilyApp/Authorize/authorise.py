@@ -48,6 +48,27 @@ def dummy():
     print("hello")
 
 
+def getIDandUserPrincipleId(access_token):
+    url = "https://graph.microsoft.com/v1.0/me"
+
+    headers = { 
+    'Authorization' : 'Bearer {0}'.format(access_token),
+    'Accept' : 'application/json'
+    }
+
+    r = requests.get(url = url , headers = headers)
+    print(r)
+    if (r.status_code == requests.codes.ok):
+        r = r.json()
+        print(r)
+        idd = r['id']
+        name = r['userPrincipalName']
+        return r['id'], r['userPrincipalName']
+        #r.json()
+    else:
+        return "{0}: {1}".format(r.status_code, r.text)
+   
+
 def loginProcess():
     userGraphInfo = GraphInfo()
     try:
@@ -58,6 +79,8 @@ def loginProcess():
         userGraphInfo.refresh_token = access_token_json["refresh_token"]
         userGraphInfo.expires_in = access_token_json["expires_in"]
         userGraphInfo.id_token = access_token_json["id_token"]
+
+        userGraphInfo.id , userGraphInfo.userPrincipleName = getIDandUserPrincipleId(userGraphInfo.access_token)
 
         userGraphInfo.user_info_json = auth_helper.get_user_info_from_token(userGraphInfo.id_token)
         #print( "User Info" + json.dumps(userGraphInfo.user_info_json))

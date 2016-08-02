@@ -6,17 +6,17 @@ import uuid
 # The base URL for the Microsoft Graph API.
 graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 
-def dateTimeTimeZone( year, month, day, hour = 12, minute =0 , second = 0):
-    st = str(datetime.date(year, month, day)) + "T" + str(datetime.time(hour, minute, second))
-    return st 
+#def dateTimeTimeZone( year, month, day, hour = 12, minute =0 , second = 0):
+#    st = str(datetime.date(year, month, day)) + "T" + str(datetime.time(hour, minute, second))
+#    return st 
 
-def newEvent(access_token,alias, title, startDateTime, endDateTime=None , location=None, companions=None, reminder = False , notes = None):
+def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime:datetime=None , location=None, companions=None, reminder:bool = False , notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
-    #print( "\n" +access_token)
+    startDateTime = str(startDateTime.date()) + "T" + str(startDateTime.time())
+    #print ("\n" + startDateTime)
+    endDateTime = str(endDateTime.date()) + "T" + str(endDateTime.time())
 
-    #print ("\n" + new_event_url) 
-    # Set request headers.
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),
     'Accept' : 'application/json',
@@ -47,7 +47,7 @@ def newEvent(access_token,alias, title, startDateTime, endDateTime=None , locati
 
 
 def listEvents(access_token, alias):
-    list_events_url = graph_api_endpoint.format('/me/events')
+    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events?$select=subject,start,end')
     #print(list_events_url)
     #print(access_token)
     # Set request headers.
@@ -150,7 +150,7 @@ def delete(access_token, alias, title):
 
 def sendEmail(access_token, alias, emailAddress, subject, content):
 	# The resource URL for the sendMail action.
-  send_mail_url = graph_api_endpoint.format('/me/microsoft.graph.sendMail')	
+  send_mail_url = graph_api_endpoint.format('/Users/' +alias+ '/microsoft.graph.sendMail')	
 	# Set request headers.
   headers = { 
 		'User-Agent' : 'python_tutorial/1.0',
