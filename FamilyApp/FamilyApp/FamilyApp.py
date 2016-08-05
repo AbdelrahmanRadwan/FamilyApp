@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from Authorize import authorise  
-from projectoxford import speech, audio 
+from projectoxford import speech, audio , luis
 from Household import Household
 from Individual import Individual
 import Event
@@ -170,12 +170,20 @@ def howCanIHelp():
 
 
 
-houseHoldEnrollmentProcess()
+#houseHoldEnrollmentProcess()
 
 #checkingEnrollment()
 
 #howCanIHelp()
 
-graphInteraction(currentSpeaker)
+#graphInteraction(currentSpeaker)
 
-myHome.finishing()
+#myHome.finishing()
+luisUrl = 'https://api.projectoxford.ai/luis/v1/application?id=45ddef93-d4d8-4d55-8d38-b725e908925d&subscription-key=7a80c853b5184b239d2aaf9b013e3dec&q='
+luisCl = luis.LuisClient( luisUrl)
+
+intent, entity ,type = luisCl.query(" book me a flight from cairo")
+
+print(intent)
+print(entity)
+print(type)

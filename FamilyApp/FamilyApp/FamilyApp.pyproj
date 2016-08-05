@@ -46,6 +46,21 @@
     <Compile Include="Individual.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LUISHandler.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luis_sdk\aliaa.py" />
+    <Compile Include="luis_sdk\luis_action.py" />
+    <Compile Include="luis_sdk\luis_client.py" />
+    <Compile Include="luis_sdk\luis_dialog.py" />
+    <Compile Include="luis_sdk\luis_entity.py" />
+    <Compile Include="luis_sdk\luis_intent.py" />
+    <Compile Include="luis_sdk\luis_parameter.py" />
+    <Compile Include="luis_sdk\luis_parametervalue.py" />
+    <Compile Include="luis_sdk\luis_response.py" />
+    <Compile Include="luis_sdk\test_app.py" />
+    <Compile Include="luis_sdk\test_app_async.py" />
+    <Compile Include="luis_sdk\__init__.py" />
     <Compile Include="projectoxford\audio.py" />
     <Compile Include="projectoxford\luis.py" />
     <Compile Include="projectoxford\speech.py" />
@@ -74,6 +89,8 @@
   <ItemGroup>
     <Folder Include="Authorize\" />
     <Folder Include="Graph\" />
+    <Folder Include="luis_sdk\" />
+    <Folder Include="luis_sdk\__pycache__\" />
     <Folder Include="SavedFiles\" />
     <Folder Include="projectoxford\" />
     <Folder Include="projectoxford\tests\" />
@@ -84,6 +101,25 @@
     <Folder Include="Speaker\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ExampleJsonResponse.txt" />
+    <Content Include="luis_sdk\luis_action.pyc" />
+    <Content Include="luis_sdk\luis_client.pyc" />
+    <Content Include="luis_sdk\luis_dialog.pyc" />
+    <Content Include="luis_sdk\luis_entity.pyc" />
+    <Content Include="luis_sdk\luis_intent.pyc" />
+    <Content Include="luis_sdk\luis_parameter.pyc" />
+    <Content Include="luis_sdk\luis_parametervalue.pyc" />
+    <Content Include="luis_sdk\luis_response.pyc" />
+    <Content Include="luis_sdk\__init__.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_action.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_client.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_dialog.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_entity.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_intent.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_parameter.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_parametervalue.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\luis_response.cpython-35.pyc" />
+    <Content Include="luis_sdk\__pycache__\__init__.cpython-35.pyc" />
     <Content Include="projectoxford\.speech.py.swp" />
     <Content Include="projectoxford\tests\__pycache__\__init__.cpython-32.pyc" />
     <Content Include="projectoxford\__pycache__\audio.cpython-32.pyc" />

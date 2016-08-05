@@ -64,3 +64,5 @@ class Household(object):
             idFileWrite.close()
         except:
             print("Couldn't write id json's to file")
+
+        self.shoppingList.finishing()

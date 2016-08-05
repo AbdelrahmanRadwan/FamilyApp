@@ -44,7 +44,9 @@ class LuisClient(object):
         r = requests.get(self.url + parse.quote(text))
         r.raise_for_status()
 
+        print (r.json())
         return r.json()
+    
 
     def query(self, text):
         '''Queries the LUIS web service with the provided text and

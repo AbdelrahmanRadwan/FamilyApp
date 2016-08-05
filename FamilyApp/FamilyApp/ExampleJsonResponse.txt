@@ -1,0 +1,51 @@
+{
+  "query": "to rome",
+  "topScoringIntent": {
+    			"intent": "Bookflight",
+    			"score": 0.9492676,
+    			"actions": [
+							  {
+								"triggered": true,
+								"name": "Bookflight",
+								"parameters": [
+												  {
+													"name": "to",
+													"required": true,
+													"value": [
+													  {
+														"entity": "rome",
+														"type": "to",
+														"resolution": {}
+													  }
+													]
+												  },
+								  {
+									"name": "from",
+									"required": true,
+									"value": [
+									  {
+										"entity": "london",
+										"type": "from",
+										"resolution": {}
+									  }
+									]
+								  }
+								]
+							  }
+							]
+						  },
+						  "entities": [
+							{
+							  "entity": "rome",
+							  "type": "to",
+							  "startIndex": 3,
+							  "endIndex": 6,
+							  "score": 0.5794182,
+							  "resolution": {}
+							}
+						  ],
+						  "dialog": {
+							"contextId": "8659aba0-5c09-4413-b4e1-c02086e49459",
+							"status": "Finished"
+						  }
+}
