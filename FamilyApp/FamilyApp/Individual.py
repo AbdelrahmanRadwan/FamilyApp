@@ -31,15 +31,15 @@ class Individual(object):
         try:
             self.speakerProfileID = speaker.create_profile(self.speakerKey,'EN-US')
             print("Profile created. " )
-        except:
-            print("Error creating the speaker user profile")
+        except Exception as exc:
+            print("Error creating the speaker user profile" , exc)
 
     def login(self):
         try:
             self.graphInfo =authorise.loginProcess()
             
-        except:
-            Print("Login failed")
+        except Exception as exc:
+            Print("Login failed" , exc)
 
     def enroll(self):
 

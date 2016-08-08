@@ -32,9 +32,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
 import json
-from .luis_intent import LUISIntent
-from .luis_entity import LUISEntity
-from .luis_dialog import LUISDialog
+import luis_intent, luis_entity, luis_dialog
+from luis_intent import LUISIntent
+from luis_entity import LUISEntity
+from luis_dialog import LUISDialog
 
 class LUISResponse:
     '''

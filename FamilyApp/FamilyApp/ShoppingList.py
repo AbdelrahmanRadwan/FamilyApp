@@ -24,11 +24,14 @@ class ShoppingList(object):
             shopFileRead.close()
 
     def checkIfOnList(self, Item):
+        found = -1
         for items in self.shopping :
             if items.name == Item.name :
-                return self.shopping.index(items)
+                found =  self.shopping.index(items)
+                return found 
             else :
-                return -1
+                found = -1
+        return found
 
     def addItems(self, itemList:list ):
         for items in itemList:
@@ -60,7 +63,7 @@ class ShoppingList(object):
         except Exception as exc:
             print(exc)
 
-        ######################################
+
     def emailList(self, access_token, alias):
 
         it = ""
@@ -104,14 +107,17 @@ class ShoppingList(object):
 		    'SaveToSentItems': 'true'
 	    }   
 
-        response = requests.post(url = send_mail_url, headers = headers, data = json.dumps(email), params = None)
+        try:
+            response = requests.post(url = send_mail_url, headers = headers, data = json.dumps(email), params = None)
 
-	    # Check if the response is 202 (success) or not (failure).
-        if (response.status_code == requests.codes.accepted):
-            return response.status_code
-        else:
-            return "{0}: {1}".format(response.status_code, response.text)
-        ######################################
+	        # Check if the response is 202 (success) or not (failure).
+            if (response.status_code == requests.codes.accepted):
+                return response.status_code
+            else:
+                return "{0}: {1}".format(response.status_code, response.text)
+        except Exception as exc:
+            print (exc)
+
         ######################################
     def listItems(self):
         pass

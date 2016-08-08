@@ -1,36 +1,36 @@
 {
   "query": "to rome",
   "topScoringIntent": {
-    			"intent": "Bookflight",
-    			"score": 0.9492676,
-    			"actions": [
-							  {
-								"triggered": true,
-								"name": "Bookflight",
-								"parameters": [
-												  {
-													"name": "to",
-													"required": true,
-													"value": [
-													  {
-														"entity": "rome",
-														"type": "to",
-														"resolution": {}
-													  }
-													]
-												  },
-								  {
-									"name": "from",
-									"required": true,
-									"value": [
-									  {
-										"entity": "london",
-										"type": "from",
-										"resolution": {}
-									  }
-									]
-								  }
-								]
+	"intent": "Bookflight",
+	"score": 0.9492676,
+	"actions": [
+	{
+	"triggered": true,
+	"name": "Bookflight",
+	"parameters": [
+			{
+			"name": "to",
+			"required": true,
+			"value": [
+				{
+				"entity": "rome",
+				"type": "to",
+				"resolution": {}
+				}
+			]
+			},
+		{
+		"name": "from",
+		"required": true,
+		"value": [
+			{
+			"entity": "london",
+			"type": "from",
+			"resolution": {}
+			}
+		]
+		}
+					]
 							  }
 							]
 						  },

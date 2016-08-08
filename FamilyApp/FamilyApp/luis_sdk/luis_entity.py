@@ -46,7 +46,10 @@ class LUISEntity:
         self._type = entity['type']
         self._start_idx = entity['startIndex']
         self._end_idx = entity['endIndex']
-        self._score = entity['score']
+        if 'score' in entity:
+            self._score = entity['score']
+        if 'resolution' in entity :
+            self._resolution = entity['resolution']
 
     def get_name(self):
         '''
@@ -82,3 +85,6 @@ class LUISEntity:
         :return: Entity's score.
         '''
         return self._score
+
+    def get_resolution(self):
+        return self._resolution

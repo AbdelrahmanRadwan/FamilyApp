@@ -34,7 +34,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import threading
 from urllib.parse import quote
 import http.client
-from .luis_response import LUISResponse
+import luis_response
+from luis_response import LUISResponse
 
 class LUISClient:
     '''

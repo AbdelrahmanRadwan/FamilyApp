@@ -10,7 +10,7 @@ graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 #    st = str(datetime.date(year, month, day)) + "T" + str(datetime.time(hour, minute, second))
 #    return st 
 
-def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime:datetime=None , location=None, companions=None, reminder:bool = False , notes = None):
+def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime:datetime=None , location=None, companions=None, reminder:bool = False ,reminderTime = 60, notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
     startDateTime = str(startDateTime.date()) + "T" + str(startDateTime.time())
@@ -26,14 +26,11 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
             'subject' : title,
             'start' : {'dateTime' : startDateTime, 'timeZone' : 'Africa/Cairo'},
             'end' : {'dateTime' : endDateTime, 'timeZone' : 'Africa/Cairo'},
-            #'originalEndTimeZone' : 'Africa/Cairo',
-            #'originalStartTimeZone' : 'Africa/Cairo',
-            #'responseStatus': {'response': 'Accepted', 'time': '2016-08-03T08:16:00Z'},
             'iCalUId': str(uuid.uuid4()),
             #'location' : location,
-            #'attendees' : companions,
+            'itemBody' : {'content':companions, 'contentType': 'string'},
             'isReminderOn' : reminder,
-            'reminderMinutesBeforeStart' : 60
+            'reminderMinutesBeforeStart' : reminderTime
             }
 
     #print (type(data))
@@ -46,8 +43,10 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
         return "{0}: {1}".format(r.status_code, r.text)
 
 
-def listEvents(access_token, alias):
-    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events?$select=subject,start,end')
+def listEvents(access_token, alias, title=None, startDateTime=None, attendees=None):
+
+
+    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events?$select=subject,start&$filter=substringof('+title+',subject)')
     #print(list_events_url)
     #print(access_token)
     # Set request headers.
@@ -65,8 +64,9 @@ def listEvents(access_token, alias):
         return "{0}: {1}".format(r.status_code, r.text)
 
 
-def getEventDetailsByTitle(access_token, alias, title):
-    get_event_details_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events$filter=substringof(subject,'+title+')')
+def getEventDetails(access_token, alias,id, **options):
+
+    get_event_details_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events/' +id)
         
     # Set request headers.
     headers = { 
@@ -78,32 +78,25 @@ def getEventDetailsByTitle(access_token, alias, title):
     r = requests.get(url = get_event_details_url, headers = headers)
     if (response.status_code == requests.codes.accepted):
         return response.status_code
-        #r.json()
-        #handle: launch thread to speak the event details
-    else:
-        return "{0}: {1}".format(response.status_code, response.text)
+        r.json()
 
-def getEventDetailsByDate(access_token, alias, datetime):
-    get_event_details_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
-        
-    # Set request headers.
-    headers = { 
-    'Authorization' : 'Bearer {0}'.format(access_token),
-    'Accept' : 'application/json',
-    'Content-Type' : 'application/json'
-    }
-
-    r = requests.get(url = get_event_details_url, headers = headers)
-    if (response.status_code == requests.codes.accepted):
-        return response.status_code
-        #r.json()
+        self.dictOfInfo = {}
+        for events in r:
+            if options.get('title'):
+                self.dictOfInfo['title'] = r['title']
+            if options.get('location'):
+                self.dictOfInfo['location'] = r['location']
+            if options.get('startDateTime'):
+                self.dictOfInfo['startDateTime'] = r['startDateTime']
+            if options.get('attendees'):
+                self.dictOfInfo['attendees'] = r['itemBody']['content']
         #handle: launch thread to speak the event details
     else:
         return "{0}: {1}".format(response.status_code, response.text)
 
 
-def updateEvent(access_token, alias, **options):
-        #Function to identify event to be deleted using title
+
+def updateEvent(access_token, alias,id, **options):
     update_event_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events/"+id)
 
     headers = {'Authorization' : 'Bearer {0}'.format(access_token)
@@ -114,12 +107,8 @@ def updateEvent(access_token, alias, **options):
         data ['subject'] = options['title']
     if options.get('startDateTime'):
         data ['start'] = options['startDateTime']
-    if options.get('reminder'):
-        data ['isReminderOn'] = options['reminder']
-    if options.get('reminderTime'):
-        data ['reminderMinutesBeforeStart'] = options['reminderTime']
-    if options.get('endDateTime'):
-        data ['end'] = options['endDateTime']
+    if options.get('attendees'):
+        data['itemBody']['content'] = options['attendees']
 
     r = requests.patch(url = get_event_details_url,data = data, headers = headers)
     if (response.status_code == requests.codes.accepted):
@@ -128,9 +117,8 @@ def updateEvent(access_token, alias, **options):
         return "{0}: {1}".format(response.status_code, response.text)
 
 
-def delete(access_token, alias, title):
+def delete(access_token, alias, id):
 
-    #Function to identify event to be deleted using title
     delete_event_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events/"+id)
         
     # Set request headers.
@@ -144,8 +132,40 @@ def delete(access_token, alias, title):
     else:
         return "{0}: {1}".format(response.status_code, response.text)
        
-#def identifyEvent(alias, **options):
+def identifyEvent(access_token, alias, **options):
+    #filter options
+    filter = []
+    if options.get('title'):
+        filter.append('?$filter=substringof('+options['title']+',subject)')
+    if options.get('location'):
+        filter.append('?$filter=substringof('+options['location']+',location)')
+    if options.get('startDateTime'):
+        s = datetime.datetime()
+        if options['startDateTime'].date() is not None:
+            s.date = options['startDateTime'].date()
+        if options['startDateTime'].time() is not None:
+            s.time = options['startDateTime'].time()
 
+            filter.append('?$filter=substringof('+s.date+'T'+s.time+',start)')
+        if options.get('attendees'):
+            filter.append('?$filter=substringof('+options['attendees']+',itemBody/content)')
+
+    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events/?select=id')
+    #print(list_events_url)
+    #print(access_token)
+    # Set request headers.
+    headers = { 
+    'Authorization' : 'Bearer {0}'.format(access_token),
+    'Accept' : 'application/json',
+    'Content-Type' : 'application/json'
+    }
+
+    r = requests.get(url = list_events_url, headers = headers)
+    if (r.status_code == requests.codes.accepted):
+        return r.status_code
+        #r.json()
+    else:
+        return "{0}: {1}".format(r.status_code, r.text)
 #       get_event_details_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
 
 def sendEmail(access_token, alias, emailAddress, subject, content):

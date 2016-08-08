@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 
 from Authorize import authorise  
-from projectoxford import speech, audio , luis
+from projectoxford import speech, audio
 from Household import Household
 from Individual import Individual
 import Event
 from Speaker import speaker, IdentificationServiceHttpClientHelper
 import wave
 import datetime
+import LUISHandler 
+
 myHome = Household()
 
 currentSpeaker = None
@@ -179,11 +181,18 @@ def howCanIHelp():
 #graphInteraction(currentSpeaker)
 
 #myHome.finishing()
-luisUrl = 'https://api.projectoxford.ai/luis/v1/application?id=45ddef93-d4d8-4d55-8d38-b725e908925d&subscription-key=7a80c853b5184b239d2aaf9b013e3dec&q='
-luisCl = luis.LuisClient( luisUrl)
 
-intent, entity ,type = luisCl.query(" book me a flight from cairo")
+#luisUrl = 'https://api.projectoxford.ai/luis/v1/application?id=45ddef93-d4d8-4d55-8d38-b725e908925d&subscription-key=7a80c853b5184b239d2aaf9b013e3dec&q='
+#luisCl = luis.LuisClient( luisUrl)
 
-print(intent)
-print(entity)
-print(type)
+#intent, entity ,type = luisCl.query(" book me a flight from cairo")
+
+#print(intent)
+#print(entity)
+#print(type)
+
+text = 'add a meeting to the 3rd of march at 7 pm'
+
+luishandler = LUISHandler.LUISHandler(myHome.dictionaryOfIndividuals,currentSpeaker)
+
+luishandler.convo(text)

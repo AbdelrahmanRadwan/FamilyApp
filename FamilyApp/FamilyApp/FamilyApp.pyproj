@@ -6,7 +6,7 @@
     <ProjectGuid>cce05e9e-6e85-4e13-acda-27a742816f23</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>FamilyApp.py</StartupFile>
-    <SearchPath>.;Authorize\;Graph\;projectoxford\;Speaker\;Recordings\</SearchPath>
+    <SearchPath>.;Authorize\;Graph\;projectoxford\;Speaker\;Recordings\;luis_sdk\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>FamilyApp</Name>
@@ -134,6 +134,7 @@
     <Content Include="Recordings\firstEnrollPrompt.wav" />
     <Content Include="Recordings\howCanIHelp.wav" />
     <Content Include="Recordings\howmayihelp.wav" />
+    <Content Include="Recordings\internetError.wav" />
     <Content Include="Recordings\needAnythingElse.wav" />
     <Content Include="Recordings\repeatEnroll.wav" />
     <Content Include="Recordings\waiting.wav" />

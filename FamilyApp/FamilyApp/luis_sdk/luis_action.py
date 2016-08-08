@@ -30,8 +30,8 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
-
-from .luis_parameter import LUISParameter
+import luis_parameter
+from luis_parameter import LUISParameter
 
 class LUISAction:
     '''

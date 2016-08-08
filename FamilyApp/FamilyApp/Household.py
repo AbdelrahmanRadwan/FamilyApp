@@ -24,6 +24,8 @@ class Household(object):
             self.dictionaryOfIndividuals = {}
 
         self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
+
+
         if os.path.exists(Household._IDTONAME_FILEPATH) and os.path.getsize(Household._IDTONAME_FILEPATH) > 0:
             idFileRead = open(Household._IDTONAME_FILEPATH,'rb')
             self.dictionaryOfSpeakerIDtoName = pickle.load(idFileRead)
