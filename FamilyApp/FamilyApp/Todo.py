@@ -1,5 +1,7 @@
 from queue import PriorityQueue
 import datetime
+import os 
+
 priorities = { 'high' :1,
               'medium' :2,
               'low' :3}
@@ -25,10 +27,13 @@ class TodoList(object):
         
 
     def addTodo(self, todo: Todo):
-        self.q.put(todo.priority, todo)
+        self.q.put(todo)
 
     def finishedTodo(self, todo:Todo):
         self.q.get(todo)
+
+    def listTodos(self):
+        pass
 
     def finishing(self):
         try:
@@ -39,4 +44,15 @@ class TodoList(object):
         except Exception as exc:
             print(exc)
 
-    
+
+#todolist = TodoList()
+
+
+#print (todolist.q.queue)
+
+#todo = Todo('go to sleep ')
+#todolist.q.p
+#todolist.addTodo(todo)
+#todolist.addTodo(Todo("say hello", priority = 1))
+
+#print (todolist.q.queue)
