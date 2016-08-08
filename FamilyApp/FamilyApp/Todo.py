@@ -1,12 +1,12 @@
 from queue import PriorityQueue
-
+import datetime
 priorities = { 'high' :1,
               'medium' :2,
               'low' :3}
 
 class Todo(object):
 
-    def __init__(self, content: str, date, time , priority ):
+    def __init__(self, content: str, date:datetime = None, time = None , priority = 2):
         self.content = content
         self.date = date
         self.time = time
