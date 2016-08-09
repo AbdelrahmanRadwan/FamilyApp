@@ -48,6 +48,8 @@ class LUISParameterValue:
             self._score = parameter_value['score']
         else:
             self._score = None
+        if 'resolution' in parameter_value :
+            self._resolution = parameter_value['resolution']
 
     def get_name(self):
         '''
@@ -69,3 +71,6 @@ class LUISParameterValue:
         :return: Parameter values's score.
         '''
         return self._score
+
+    def get_resolution(self):
+        return self._resolution

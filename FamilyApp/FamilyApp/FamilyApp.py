@@ -172,7 +172,7 @@ def howCanIHelp():
 
 
 
-#houseHoldEnrollmentProcess()
+houseHoldEnrollmentProcess()
 
 #checkingEnrollment()
 
@@ -191,7 +191,8 @@ def howCanIHelp():
 #print(entity)
 #print(type)
 
-text = 'add a meeting to the 3rd of march at 7 pm'
+text = 'add a meeting on monday the 3rd at 7 pm '
+
 
 luishandler = LUISHandler.LUISHandler(myHome.dictionaryOfIndividuals,currentSpeaker)
 

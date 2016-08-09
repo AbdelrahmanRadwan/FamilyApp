@@ -8,10 +8,12 @@ import ShoppingList
 import Todo
 import datetime
 
+
 class LUISHandler(object):
 
-    _LUIS_APP_ID = '83c8433d-d8b8-4191-85cf-997965b21c1c'
-    _LUIS_APP_SECRET = '7a80c853b5184b239d2aaf9b013e3dec'
+    #Familia
+    _LUIS_APP_ID = '064067b9-a41f-476c-9d82-9fbb115fcf88'
+    _LUIS_APP_SECRET = '3a1943947f00483ab502d6cae5e15198'
 
     _SPEECH_KEY =  'e7e321f984f24f5299c185e9f2658a3b'
 
@@ -21,7 +23,7 @@ class LUISHandler(object):
     callBacks = { 'AddEvent' : Event.newEvent,
                  'ListEvents' : Event.listEvents,
                  'DeleteEvent' : Event.delete,
-                 'GetEventDetails' : Event.getEventDetailsByDate,
+                 'GetEventDetails' : Event.getEventDetails,
                  'ChangeEventDetails' : Event.updateEvent,
                  'AddEventDetails' : Event.updateEvent,
                  'AddReminder' : Event.updateEvent
@@ -63,23 +65,26 @@ class LUISHandler(object):
     def callAppropriateFunc(self,intName, ent, paramDict , listOfQueries):
         
         #processing alias and access_token
-        if paramDict['alias'] is not None:
+        if 'alias' in paramDict.keys() :
             access_token = inds[paramDict['alias']].graphInfo.access_token
             alias = inds[paramDict['alias']].graphInfo.access_token
         else:
-            access_token = currentSpeaker.graphInfo.access_token
-            alias = currentSpeaker.graphInfo.access_token
+            access_token = self.currentSpeaker.graphInfo.access_token
+            alias = self.currentSpeaker.graphInfo.access_token
 
-        startDateTime = datetime.datetime()
+        startDateTime = datetime.datetime.now()
 
         #processing startdatetime
-        if type(paramDict['startDateTime']) is str:
-            startDateTime = paramDict['startDateTime']
-        elif type(paramDict['startDateTime']) is list :
-            if paramDict['startDateTime'][1:] == paramDict['startDateTime'][:1]:
-                startDateTime = paramDict['startDateTime'][0]
+        if type(paramDict['datetime']) is dict:
+            if 'date' in paramDict['datetime'].keys() :
+                startDateTime = paramDict['datetime']['date']
+            elif 'time' in paramDict['datetime'].keys() :
+                startDateTime = paramDict['datetime']['time']
+        elif type(paramDict['datetime']) is list :
+            if paramDict['datetime'][1:] == paramDict['datetime'][:1]:
+                startDateTime = paramDict['datetime'][0]
             else:
-                for eachdatetime in paramDict['startDateTime']:
+                for eachdatetime in paramDict['datetime']:
                     if eachdatetime['date'] is not None:
                         startDateTime.date = eachdatetime['date']
                     elif eachdatetime['time'] is not None:
@@ -94,7 +99,15 @@ class LUISHandler(object):
             #ALL THESE CALLS HAVE TO BE PUT IN THREADS
             #################################################
         if intName == 'AddEvent':
-            Event.newEvent(access_token, alias, paramDict['title'],startDateTime,None,paramDict['location'],paramDict['attendees'],paramDict['reminder'],paramDict['reminderTime'])
+            Event.newEvent(access_token = access_token, 
+                           alias = alias, 
+                           title = paramDict['title'],
+                           startDateTime = startDateTime,
+                           endDateTime = None,
+                           location = paramDict['location'],
+                           attendees =  paramDict['attendees'],
+                           reminder = paramDict['reminder'],
+                           reminderTime = paramDict['reminderTime'])
         elif intName == 'ListEvents':
             Event.listEvents(access_token, alias, paramDict['title'], paramDict['startDateTime'], paramDict['attendees'])
         elif intName == 'CheckFree':
@@ -102,7 +115,14 @@ class LUISHandler(object):
 
         elif intName == 'AddReminder' or 'ChangeEventDetail' or 'DeleteEvent' or 'GetEventDetails':
             
-            eventID = Event.identifyEvent(access_token, alias, paramDict['title'], paramDict['startDateTime'], paramDict['attendees'])
+            try :
+                eventID = Event.identifyEvent(access_token, alias, paramDict['title'], paramDict['startDateTime'], paramDict['attendees'])
+            except Event.TooFewValues as exc:
+                print(exc)
+                pass
+            except Event.TooManyValues as exc:
+                print(exc)
+                pass
 
             if intName == 'DeleteEvent':
                 Event.delete(access_token,alias,eventID)
@@ -126,8 +146,9 @@ class LUISHandler(object):
         if res.get_top_intent().get_actions() is not None:
             pars = res.get_top_intent().get_actions()[0].get_parameters()
     
+        paramDict = {}
         for eachParam in pars:
-            values = eachParam.get_param_values()
+            values = eachParam.get_parameter_values()
             if len(values) == 1 :
                if 'builtin.datetime' in values[0].get_type():
                     paramDict[eachParam.get_name()] = values[0].get_resolution()
@@ -154,7 +175,7 @@ class LUISHandler(object):
                     listOfVals.append(eachVal.get_name())
                 paramDict[eachParam.get_name()] = listOfVals 
 
-        callAppropriateFunc(intName, ent, paramDict , listOfQueries)
+        self.callAppropriateFunc(intName, ent, paramDict , listOfQueries)
 
     def on_failure(self, err):
         '''

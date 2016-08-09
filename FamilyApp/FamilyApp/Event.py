@@ -10,6 +10,15 @@ graph_api_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 #    st = str(datetime.date(year, month, day)) + "T" + str(datetime.time(hour, minute, second))
 #    return st 
 
+class TooManyValues(ValueError):
+
+    pass
+    
+
+class TooFewValues(ValueError):
+    pass
+
+
 def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime:datetime=None , location=None, companions=None, reminder:bool = False ,reminderTime = 60, notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
@@ -163,7 +172,13 @@ def identifyEvent(access_token, alias, **options):
     r = requests.get(url = list_events_url, headers = headers)
     if (r.status_code == requests.codes.accepted):
         return r.status_code
-        #r.json()
+        r = r.json()
+        if  len(r['value']) == 1 :
+            return r['value']['id']
+        elif  len(r['value']) == 0 :
+            raise TooFewValues()
+        elif len(r['value']) > 1 :
+            raise TooManyValues(r)
     else:
         return "{0}: {1}".format(r.status_code, r.text)
 #       get_event_details_url = graph_api_endpoint.format("/Users/"+alias+"/calendar/events$filter=substringof(start,datetime'"+datetime+"')")
