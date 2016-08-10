@@ -9,6 +9,7 @@ from Speaker import speaker, IdentificationServiceHttpClientHelper
 import wave
 import datetime
 import LUISHandler 
+import time
 
 myHome = Household()
 
@@ -124,47 +125,53 @@ def checkingEnrollment():
 
 
 def howCanIHelp():
+
+    helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
+    listOfProfiles = helper.get_all_profiles()
+    listOfIDs =[]
+    for profiles in listOfProfiles:
+        listOfIDs.append(profiles.get_profile_id())
+
     firstloop = True
     while(1):
         if firstloop==True :
             audio.play("Recordings/howCanIHelp.wav")
             firstloop= False
-
+        
         wavFile = "Recordings/instruction.wav"
         fileOpen = wave.open(wavFile,'w')
         fileOpen.setnchannels(1)
         fileOpen.setsampwidth(2)
         fileOpen.setframerate(16000)
+        print("start speaking")
         audio.play(speech._BEEP_WAV)
         audio.record(wav=fileOpen, seconds=10, wait_for_sound = True)
         print("Done recording")
         fileOpen.close()
 
         waveRead = open(wavFile, 'rb')
+        print(time.clock())
         response = myHome.houseSpeech.recognize(require_high_confidence = True, wav = waveRead.read())
-        #print ("\nResponse:" + response)
-
-        helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
-        listOfProfiles = helper.get_all_profiles()
-        listOfIDs =[]
-        for profiles in listOfProfiles:
-            listOfIDs.append(profiles.get_profile_id())
+        print(time.clock())
+        print ("\nResponse:" + response)
 
         #print(listOfIDs)
+        print(time.clock())
         iden = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
+        print(time.clock())
         print("Identified: " , iden)
-        if (myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id()))!= None :
-            user = myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id())
-            print( user + " said: " +response)
-            myHome.houseSpeech.say( user + " said: " +response)
-        else: 
-            print("User currently not enrolled.")
-            print("Instruction is: " +response)
+        #if (myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id()))!= None :
+        #    user = myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id())
+        #    print( user + " said: " +response)
+        #    myHome.houseSpeech.say( user + " said: " +response)
+        #else: 
+        #    print("User currently not enrolled.")
+        #    print("Instruction is: " +response)
 
-        audio.play("Recordings/needAnythingElse.wav")
-        response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
-        if response.lower().find("yes")==-1 :
-            break
+        #audio.play("Recordings/needAnythingElse.wav")
+        #response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
+        #if response.lower().find("yes")==-1 :
+        #    break
     
 
 
@@ -172,11 +179,11 @@ def howCanIHelp():
 
 
 
-houseHoldEnrollmentProcess()
+#houseHoldEnrollmentProcess()
 
 #checkingEnrollment()
 
-#howCanIHelp()
+howCanIHelp()
 
 #graphInteraction(currentSpeaker)
 
@@ -191,9 +198,9 @@ houseHoldEnrollmentProcess()
 #print(entity)
 #print(type)
 
-text = 'add a meeting on monday the 3rd at 7 pm '
+#text = 'add a meeting on monday the 3rd at 7 pm '
 
 
-luishandler = LUISHandler.LUISHandler(myHome.dictionaryOfIndividuals,currentSpeaker)
+#luishandler = LUISHandler.LUISHandler(myHome.dictionaryOfIndividuals,currentSpeaker)
 
-luishandler.convo(text)
+#luishandler.convo(text)
