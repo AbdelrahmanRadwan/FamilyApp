@@ -168,7 +168,7 @@ def howCanIHelp():
         else :
             ##handle low confidence speaker iden 
             pass
-        luishandler.convo(response)
+        luishandler.convo(response,currentSpeaker)
 
         #if (myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id()))!= None :
         #    user = myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id())

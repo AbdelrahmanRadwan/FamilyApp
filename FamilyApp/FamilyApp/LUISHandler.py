@@ -35,7 +35,7 @@ class LUISHandler(object):
         self.inds = householdInds
         self.currentSpeaker = currentSpeaker
 
-    def convo(self, text):
+    def convo(self, text, currentSpeaker:Individual):
         self.listOfQueries =[text]
         try :
             res = LUISHandler.LuisCl.predict_sync(text)
@@ -55,7 +55,7 @@ class LUISHandler(object):
 
                         res = LUISHandler.LuisCl.reply(answer, res)
         
-                self.on_success(res, self.listOfQueries)
+                self.on_success(res, self.listOfQueries, currentSpeaker)
             else:
                 LUISHandler.SpCl.say('Sorry could you phrase that more clearly')
                 res =LUISHandler.SpCl.recognize(require_high_confidence = True)
@@ -79,11 +79,11 @@ class LUISHandler(object):
                 else:
                     date = date.replace('XX',str(datetime.date.today().month+1))
                 self.startDateTime = datetime.datetime.strptime( date, '%Y-%m-%d')
-                self.startDateTime.time = datetime.time(12)
+                self.startDateTime.replace(hour = 12)
             elif 'time' in input.keys() :
                 self.startDateTime.date = datetime.date.today()
                 time = split(input['time'],':')
-                self.startDateTime.time = datetime.time(time[0],time[1],time[2])
+                self.startDateTime.replace(hour = time[0], minute = time[1], second = time[2])
 
         elif type(input) is list :
             if input[1:] == input[:1]:
@@ -110,21 +110,21 @@ class LUISHandler(object):
                         self.startDateTime.time = eachdatetime['time'][1:]
 
                 if self.startDateTime.date() is None:
-                    self.startDateTime.date = datetime.date.today()
+                    self.startDateTime = datetime.date.today()
                 if self.startDateTime.time() is None:
-                    self.startDateTime.time = datetime.time(12)
+                    self.startDateTime.replace(hour = 12)
 
         return self.startDateTime
 
-    def callAppropriateFunc(self,intName, ent, paramDict , listOfQueries):
+    def callAppropriateFunc(self,intName, ent, paramDict , listOfQueries, currentSpeaker:Individual):
         
         #processing alias and access_token
         if 'alias' in paramDict.keys() :
             access_token = inds[paramDict['alias']].graphInfo.access_token
             alias = inds[paramDict['alias']].graphInfo.id
         else:
-            access_token = self.currentSpeaker.graphInfo.access_token
-            alias = self.currentSpeaker.graphInfo.id
+            access_token = currentSpeaker.graphInfo.access_token
+            alias = currentSpeaker.graphInfo.id
 
         startDateTime = self.processDateTime(paramDict['datetime'])
         endDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
@@ -178,7 +178,7 @@ class LUISHandler(object):
                 Event.getEventDetails(access_token, alias, eventID, paramDict['title'], paramDict['location'],paramDict['startDateTime'],paramDict['attendees'])
 
 
-    def on_success(self, res:LUISResponse, listOfQueries:list):
+    def on_success(self, res:LUISResponse, listOfQueries:list, currentSpeaker:Individual):
         '''
         A callback function that processes the luis_response object
         if the prediction succeeds.
@@ -219,7 +219,7 @@ class LUISHandler(object):
                     listOfVals.append(eachVal.get_name())
                 paramDict[eachParam.get_name()] = listOfVals 
 
-        self.callAppropriateFunc(intName, ent, paramDict , listOfQueries)
+        self.callAppropriateFunc(intName, ent, paramDict , listOfQueries, currentSpeaker)
 
     def on_failure(self, err):
         '''
