@@ -5,33 +5,35 @@ from projectoxford import speech, audio
 from Household import Household
 from Individual import Individual
 import Event
-from Speaker import speaker, IdentificationServiceHttpClientHelper
+from Speaker import IdentificationServiceHttpClientHelper
 import wave
 import datetime
 import LUISHandler 
 import time
 
 myHome = Household()
-
 currentSpeaker = None
+luishandler = LUISHandler.LUISHandler(myHome.dictionaryOfIndividuals,currentSpeaker)
+
 
 def graphInteraction(person:Individual):
 
-    one = Event.listEvents(person.graphInfo.access_token, person.graphInfo.userPrincipleName)
-    print("\nListing Events\n" + one)
+    #one = Event.listEvents(person.graphInfo.access_token, person.graphInfo.userPrincipleName)
+    #print("\nListing Events\n" + one)
 
-    startdatetime = datetime.datetime(2016,8,2,15,13)
-    enddatetime = datetime.datetime(2016,8,2,16,0)
+    startdatetime = datetime.datetime(2016,11,11,12)
+    enddatetime = datetime.datetime(2016,11,11,13)
 
-    two = Event.newEvent(person.graphInfo.access_token, person.graphInfo.userPrincipleName,"Test Event 2", startDateTime=startdatetime, endDateTime=enddatetime,reminder = True)
+
+    two = Event.newEvent(person.graphInfo.access_token, person.graphInfo.userPrincipleName,"Test Event 2", startDateTime=startdatetime,endDateTime=enddatetime, reminder = True)
     print(" Adding event " + two)
 
-    three = Event.listEvents(person.graphInfo.access_token, person.graphInfo.userPrincipleName )
-    print("\nListing Events\n" + three)
+    #three = Event.listEvents(person.graphInfo.access_token, person.graphInfo.userPrincipleName )
+    #print("\nListing Events\n" + three)
 
-    content = "Content of the email that should be sent."
-    r = Event.sendEmail(person.graphInfo.access_token, person.graphInfo.userPrincipleName, 'aliahassan95@aucegypt.edu','Tester Email', content)
-    print(r)
+    #content = "Content of the email that should be sent."
+    #r = Event.sendEmail(person.graphInfo.access_token, person.graphInfo.userPrincipleName, 'aliahassan95@aucegypt.edu','Tester Email', content)
+    #print(r)
 
 
 def houseHoldEnrollmentProcess():
@@ -51,7 +53,7 @@ def houseHoldEnrollmentProcess():
             if res == 'y':
                 break
 
-        person = Individual(speakerKey = myHome._SPEAKER_KEY,speechClient = myHome.houseSpeech, name= inputName)
+        person = Individual(speaker = myHome.houseSpeaker,speechClient = myHome.houseSpeech, name= inputName)
         person.login()
 
         #graphInteraction(person)
@@ -74,7 +76,7 @@ def houseHoldEnrollmentProcess():
         #else:
             #myHome.addInd(person)
 
-        #speaker.print_all_profiles(myHome._SPEAKER_KEY)
+        ##speaker.print_all_profiles(myHome._SPEAKER_KEY)
         #audio.play("Recordings/enrollPrompt.wav")
         #response =myHome.houseSpeech.recognize(locale='en-US', require_high_confidence= True)
         #if response.lower().find("yes")==-1 :
@@ -111,7 +113,7 @@ def checkingEnrollment():
             listOfIDs.append(profiles.get_profile_id())
 
         #print(listOfIDs)
-        iden = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
+        iden = myHome.houseSpeaker.identify_file( wavFile, listOfIDs)
         print("Identified: " , iden)
         if (myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id()))!= None :
             print("User: " , myHome.dictOfSpeakerIDtoName[iden.get_identified_profile_id()])
@@ -126,8 +128,8 @@ def checkingEnrollment():
 
 def howCanIHelp():
 
-    helper = IdentificationServiceHttpClientHelper.IdentificationServiceHttpClientHelper(myHome._SPEAKER_KEY)
-    listOfProfiles = helper.get_all_profiles()
+    
+    listOfProfiles = myHome.houseSpeaker.get_all_profiles()
     listOfIDs =[]
     for profiles in listOfProfiles:
         listOfIDs.append(profiles.get_profile_id())
@@ -157,9 +159,17 @@ def howCanIHelp():
 
         #print(listOfIDs)
         print(time.clock())
-        iden = speaker.identify_file(myHome._SPEAKER_KEY, wavFile, listOfIDs)
+        iden = myHome.houseSpeaker.identify_file( wavFile, listOfIDs)
         print(time.clock())
         print("Identified: " , iden)
+        if iden.get_confidence() == 'High' or 'Normal' :
+            global currentSpeaker
+            currentSpeaker = myHome.dictionaryOfIndividuals[ myHome.dictionaryOfSpeakerIDtoName[ iden.get_identified_profile_id() ]]
+        else :
+            ##handle low confidence speaker iden 
+            pass
+        luishandler.convo(response)
+
         #if (myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id()))!= None :
         #    user = myHome.dictOfSpeakerIDtoName.get(iden.get_identified_profile_id())
         #    print( user + " said: " +response)
@@ -178,8 +188,7 @@ def howCanIHelp():
 #token = r.json()
 
 
-
-#houseHoldEnrollmentProcess()
+houseHoldEnrollmentProcess()
 
 #checkingEnrollment()
 
@@ -201,6 +210,4 @@ howCanIHelp()
 #text = 'add a meeting on monday the 3rd at 7 pm '
 
 
-#luishandler = LUISHandler.LUISHandler(myHome.dictionaryOfIndividuals,currentSpeaker)
 
-#luishandler.convo(text)

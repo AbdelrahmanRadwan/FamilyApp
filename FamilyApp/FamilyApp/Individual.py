@@ -16,8 +16,8 @@ class Individual(object):
 
     _SUCCESSFULL_ENROLLMENT = "Enrolled"
 
-    def __init__(self,speakerKey, speechClient, name, graphInfo = None):
-        self.speakerKey = speakerKey
+    def __init__(self,speaker, speechClient, name, graphInfo = None):
+        self.personSpeaker = speaker
         self.personSpeech = speechClient
         self.name = name
         self.graphInfo = graphInfo
@@ -29,7 +29,7 @@ class Individual(object):
 
     def createProfile(self):
         try:
-            self.speakerProfileID = speaker.create_profile(self.speakerKey,'EN-US')
+            self.speakerProfileID = personSpeaker.create_profile(self.speakerKey,'EN-US')
             print("Profile created. " )
         except Exception as exc:
             print("Error creating the speaker user profile" , exc)
@@ -67,7 +67,7 @@ class Individual(object):
                 audio.record(wav=fileOpen,wait_for_sound=True, quiet_seconds = 5, seconds = 35)
                 print("\nDone recording")
                 audio.play("Recordings/waiting.wav")
-                enrollRes = speaker.enroll_profile(self.speakerKey,self.speakerProfileID, wav)
+                enrollRes = personSpeaker.enroll_profile(self.speakerKey,self.speakerProfileID, wav)
                 
                 #print("enrollRes type:" + type(enrollRes))
                 #print ( enrollRes.get_enrollment_status())

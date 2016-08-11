@@ -2,7 +2,7 @@ from Individual import Individual
 from ShoppingList import ShoppingList
 from projectoxford.speech import SpeechClient
 from projectoxford import audio
-from Speaker import speaker
+from Speaker import IdentificationServiceHttpClientHelper as Helper
 import json
 import pickle
 import os
@@ -10,12 +10,16 @@ import os
 class Household(object):
 
     _SPEAKER_KEY = '45b766d8beba484ca8acd58ba0b98492'
-    _SPEECH_KEY =  'e7e321f984f24f5299c185e9f2658a3b'
+    _SPEECH_KEY =  'cd5d00ac85c44a23a1bd9d334f1a8931'
     _IND_FILEPATH = "SavedFiles/Individuals.txt"
     _IDTONAME_FILEPATH = "SavedFiles/IDtoName.txt"
 
     def __init__(self):
+        self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
+        self.houseSpeaker = Helper.IdentificationServiceHttpClientHelper(Household._SPEAKER_KEY)
+
         self.shoppingList = ShoppingList()
+        
         if os.path.exists(Household._IND_FILEPATH) and os.path.getsize(Household._IND_FILEPATH) > 0:
             indFileRead = open(Household._IND_FILEPATH, 'rb')
             self.dictionaryOfIndividuals = pickle.load(indFileRead)
@@ -23,15 +27,18 @@ class Household(object):
         else:
             self.dictionaryOfIndividuals = {}
 
-        self.houseSpeech = SpeechClient(key = Household._SPEECH_KEY, locale = 'en-US', gender='Male')
-
-
         if os.path.exists(Household._IDTONAME_FILEPATH) and os.path.getsize(Household._IDTONAME_FILEPATH) > 0:
             idFileRead = open(Household._IDTONAME_FILEPATH,'rb')
             self.dictionaryOfSpeakerIDtoName = pickle.load(idFileRead)
             idFileRead.close()
         else:
             self.dictionaryOfSpeakerIDtoName = {}
+
+        #HARD CODED FOR NOW 
+        ##############################################################
+        self.dictionaryOfSpeakerIDtoName['dfacfde4-8705-4b31-869e-42aea42363e2'] = 'alia'
+        self.dictionaryOfSpeakerIDtoName['b33e073a-5c8f-4e7d-9579-71751de1ebd4'] = 'carol'
+        ##############################################################
         
 
 

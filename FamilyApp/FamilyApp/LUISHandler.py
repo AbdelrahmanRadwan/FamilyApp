@@ -7,6 +7,7 @@ import Event
 import ShoppingList
 import Todo
 import datetime
+import Individual
 
 
 class LUISHandler(object):
@@ -29,7 +30,7 @@ class LUISHandler(object):
                  'AddReminder' : Event.updateEvent
                  }
 
-    def __init__(self, householdInds, currentSpeaker):
+    def __init__(self, householdInds, currentSpeaker:Individual):
 
         self.inds = householdInds
         self.currentSpeaker = currentSpeaker
@@ -62,56 +63,99 @@ class LUISHandler(object):
         except Exception as exc:
             self.on_failure(exc)
 
+    def processDateTime(self, input):
+        #processing startdatetime
+
+        ###################################################
+        #HAVENT PROCESS IF IT'S A WEEK AS A WHOLE OR A MONTH ETC
+        ###################################################
+        self.startDateTime = datetime.datetime.now()
+        if type(input) is dict:
+            if 'date' in input.keys() :
+                date = input['date']
+                date = date.replace('XXXX',str(datetime.date.today().year))
+                if int(date[-2:]) > datetime.date.today().day :
+                    date = date.replace('XX',str(datetime.date.today().month))
+                else:
+                    date = date.replace('XX',str(datetime.date.today().month+1))
+                self.startDateTime = datetime.datetime.strptime( date, '%Y-%m-%d')
+                self.startDateTime.time = datetime.time(12)
+            elif 'time' in input.keys() :
+                self.startDateTime.date = datetime.date.today()
+                time = split(input['time'],':')
+                self.startDateTime.time = datetime.time(time[0],time[1],time[2])
+
+        elif type(input) is list :
+            if input[1:] == input[:1]:
+                date = input[0]
+                date = date.replace('XXXX',str(datetime.date.today().year))
+                if int(date[-2:]) > datetime.date.today().day :
+                    date = date.replace('XX',str(datetime.date.today().month))
+                else:
+                    date = date.replace('XX',str(datetime.date.today().month+1))
+                dt = split(input[0], '-: ')
+                self.startDateTime = datetime.datetime(dt[0], dt[1], dt[2],dt[3],dt[4])
+            else:
+                for eachdatetime in input:
+                    if eachdatetime['date'] is not None:
+                        date = eachdatetime['date']
+                        date = date.replace('XXXX',str(datetime.date.today().year))
+                        if int(date[-2:]) > datetime.date.today().day :
+                            date = date.replace('XX',str(datetime.date.today().month))
+                        else:
+                            date = date.replace('XX',str(datetime.date.today().month+1))
+                        self.startDateTime.date = datetime.datetime.strptime(date)
+                    elif eachdatetime['time'] is not None:
+                        ##check this 
+                        self.startDateTime.time = eachdatetime['time'][1:]
+
+                if self.startDateTime.date() is None:
+                    self.startDateTime.date = datetime.date.today()
+                if self.startDateTime.time() is None:
+                    self.startDateTime.time = datetime.time(12)
+
+        return self.startDateTime
+
     def callAppropriateFunc(self,intName, ent, paramDict , listOfQueries):
         
         #processing alias and access_token
         if 'alias' in paramDict.keys() :
             access_token = inds[paramDict['alias']].graphInfo.access_token
-            alias = inds[paramDict['alias']].graphInfo.access_token
+            alias = inds[paramDict['alias']].graphInfo.id
         else:
             access_token = self.currentSpeaker.graphInfo.access_token
-            alias = self.currentSpeaker.graphInfo.access_token
+            alias = self.currentSpeaker.graphInfo.id
 
-        startDateTime = datetime.datetime.now()
+        startDateTime = self.processDateTime(paramDict['datetime'])
+        endDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
 
-        #processing startdatetime
-        if type(paramDict['datetime']) is dict:
-            if 'date' in paramDict['datetime'].keys() :
-                startDateTime = paramDict['datetime']['date']
-            elif 'time' in paramDict['datetime'].keys() :
-                startDateTime = paramDict['datetime']['time']
-        elif type(paramDict['datetime']) is list :
-            if paramDict['datetime'][1:] == paramDict['datetime'][:1]:
-                startDateTime = paramDict['datetime'][0]
-            else:
-                for eachdatetime in paramDict['datetime']:
-                    if eachdatetime['date'] is not None:
-                        startDateTime.date = eachdatetime['date']
-                    elif eachdatetime['time'] is not None:
-                        ##check this 
-                        startDateTime.time = eachdatetime['time'][1:]
-                if startDateTime.date() is None:
-                    startDateTime.date = datetime.date.today()
-                if startDateTime.time() is None:
-                    startDateTime.time = datetime.time(12)
+        loc = paramDict['location'] if 'location' in paramDict.keys() else None
+        atten = paramDict['attendees'] if 'attendees' in paramDict.keys() else None
+        rem = paramDict['reminder'] if 'reminder' in paramDict.keys() else None
+        remtime = paramDict['reminderTime'] if 'reminderTime' in paramDict.keys() else None
 
             ################################################
             #ALL THESE CALLS HAVE TO BE PUT IN THREADS
             #################################################
         if intName == 'AddEvent':
-            Event.newEvent(access_token = access_token, 
-                           alias = alias, 
-                           title = paramDict['title'],
-                           startDateTime = startDateTime,
-                           endDateTime = None,
-                           location = paramDict['location'],
-                           attendees =  paramDict['attendees'],
-                           reminder = paramDict['reminder'],
-                           reminderTime = paramDict['reminderTime'])
+            try:
+                r = Event.newEvent(access_token = access_token, 
+                               alias = alias, 
+                               title = paramDict['title'],
+                               startDateTime = startDateTime,
+                               endDateTime = endDateTime,
+                               location = loc,
+                               companions =  atten,
+                               reminder = rem,
+                               reminderTime = remtime)
+                print(r)
+            except Exception as exc:
+                print (exc)
+
         elif intName == 'ListEvents':
-            Event.listEvents(access_token, alias, paramDict['title'], paramDict['startDateTime'], paramDict['attendees'])
+            Event.listEvents(access_token, alias, paramDict['title'], startDateTime, atten)
         elif intName == 'CheckFree':
-            Event.listEvents(access_token, alias, paramDict['title'], paramDict['startDateTime'])
+            Event.listEvents(access_token, alias, paramDict['title'], startDateTime)
 
         elif intName == 'AddReminder' or 'ChangeEventDetail' or 'DeleteEvent' or 'GetEventDetails':
             

@@ -19,12 +19,14 @@ class TooFewValues(ValueError):
     pass
 
 
-def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime:datetime=None , location=None, companions=None, reminder:bool = False ,reminderTime = 60, notes = None):
+def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime:datetime=None , location=None, companions="", reminder:bool = False ,reminderTime = 60, notes = None):
     new_event_url = graph_api_endpoint.format('/Users/'+alias+'/calendar/events')
 
     startDateTime = str(startDateTime.date()) + "T" + str(startDateTime.time())
+    
     #print ("\n" + startDateTime)
-    endDateTime = str(endDateTime.date()) + "T" + str(endDateTime.time())
+    if endDateTime is not None:
+        endDateTime = str(endDateTime.date()) + "T" + str(endDateTime.time())
 
     headers = { 
     'Authorization' : 'Bearer {0}'.format(access_token),
@@ -35,7 +37,7 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
             'subject' : title,
             'start' : {'dateTime' : startDateTime, 'timeZone' : 'Africa/Cairo'},
             'end' : {'dateTime' : endDateTime, 'timeZone' : 'Africa/Cairo'},
-            'iCalUId': str(uuid.uuid4()),
+            #'iCalUId': str(uuid.uuid4()),
             #'location' : location,
             'itemBody' : {'content':companions, 'contentType': 'string'},
             'isReminderOn' : reminder,
@@ -48,6 +50,7 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
     r = requests.post(url = new_event_url, json = data, headers = headers)
     if (r.status_code == requests.codes.accepted):
         return r.status_code
+        print(r.json())
     else:
         return "{0}: {1}".format(r.status_code, r.text)
 
