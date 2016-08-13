@@ -39,7 +39,7 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
             'end' : {'dateTime' : endDateTime, 'timeZone' : 'Africa/Cairo'},
             #'iCalUId': str(uuid.uuid4()),
             #'location' : location,
-            'itemBody' : {'content':companions, 'contentType': 'string'},
+            'body' : {'content':companions, 'contentType': 'text'},
             'isReminderOn' : reminder,
             'reminderMinutesBeforeStart' : reminderTime
             }
@@ -50,6 +50,7 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
     r = requests.post(url = new_event_url, json = data, headers = headers)
     if (r.status_code == requests.codes.accepted):
         return r.status_code
+        r = r.json()
         print(r.json())
     else:
         return "{0}: {1}".format(r.status_code, r.text)
@@ -57,8 +58,19 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
 
 def listEvents(access_token, alias, title=None, startDateTime=None, attendees=None):
 
+    filter = []
+    if title is not None:
+        filter.append('$filter=contains(subject, '+ title+')')
+    #if startDateTime is not None:
+    #    s = startDateTime
+    #    filter.append('$filter=substringof('+str(s.date())+',start/dateTime)')
+    if attendees is not None:
+        filter.append('$filter=contains(body/content,' + attendees+')')
 
-    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events?$select=subject,start&$filter=substringof('+title+',subject)')
+    sep = '&'
+    filters = sep.join(filter)
+
+    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events?$select=subject,start,body,location&' +filters )
     #print(list_events_url)
     #print(access_token)
     # Set request headers.
@@ -69,9 +81,20 @@ def listEvents(access_token, alias, title=None, startDateTime=None, attendees=No
     }
 
     r = requests.get(url = list_events_url, headers = headers)
-    if (r.status_code == requests.codes.accepted):
-        return r.status_code
-        #r.json()
+    if (r.status_code == requests.codes.ok):
+        r = r.json()
+        speechResp = "You have: "
+        desiredEvents = []
+        for events in r['value'] :
+            if events['start']['dateTime'][:events['start']['dateTime'].index('T')] == str(startDateTime.date()) :
+                desiredEvents.append(events)
+                speechResp += events['subject'] 
+                if len(events['body']['content'])>0 :
+                    speechResp += " with " + events['body']['content']
+                speechResp += " at " + events['start']['dateTime'][events['start']['dateTime'].index('T')+1:events['start']['dateTime'].index('T')+5]
+                speechResp += ", "
+        print(r)
+        return speechResp
     else:
         return "{0}: {1}".format(r.status_code, r.text)
 
@@ -92,17 +115,21 @@ def getEventDetails(access_token, alias,id, **options):
         return response.status_code
         r.json()
 
+        toSay = ""
         self.dictOfInfo = {}
-        for events in r:
+        with r['value'] as r :
             if options.get('title'):
-                self.dictOfInfo['title'] = r['title']
+                s = r['subject']
+                toSay += "event is " + s
             if options.get('location'):
-                self.dictOfInfo['location'] = r['location']
+                l = r['location']
+                toSay += " location is " + l
             if options.get('startDateTime'):
-                self.dictOfInfo['startDateTime'] = r['startDateTime']
+                dt = r['start']['dateTime']
+                toSay += " date is " + 
             if options.get('attendees'):
-                self.dictOfInfo['attendees'] = r['itemBody']['content']
-        #handle: launch thread to speak the event details
+                self.dictOfInfo['attendees'] = r['body']['content']
+       
     else:
         return "{0}: {1}".format(response.status_code, response.text)
 
@@ -120,7 +147,7 @@ def updateEvent(access_token, alias,id, **options):
     if options.get('startDateTime'):
         data ['start'] = options['startDateTime']
     if options.get('attendees'):
-        data['itemBody']['content'] = options['attendees']
+        data['body']['content'] = options['attendees']
 
     r = requests.patch(url = get_event_details_url,data = data, headers = headers)
     if (response.status_code == requests.codes.accepted):
@@ -147,22 +174,19 @@ def delete(access_token, alias, id):
 def identifyEvent(access_token, alias, **options):
     #filter options
     filter = []
-    if options.get('title'):
-        filter.append('?$filter=substringof('+options['title']+',subject)')
-    if options.get('location'):
-        filter.append('?$filter=substringof('+options['location']+',location)')
-    if options.get('startDateTime'):
-        s = datetime.datetime()
-        if options['startDateTime'].date() is not None:
-            s.date = options['startDateTime'].date()
-        if options['startDateTime'].time() is not None:
-            s.time = options['startDateTime'].time()
+    if options.get('title') is not None:
+        filter.append('$filter=contains(subject, '+ options.get('title') +')')
+    #if startDateTime is not None:
+    #    s = startDateTime
+    #    filter.append('$filter=substringof('+str(s.date())+',start/dateTime)')
+    if options.get('attendees') is not None:
+        filter.append('$filter=contains(body/content,' + options.get('attendees') +')')
 
-            filter.append('?$filter=substringof('+s.date+'T'+s.time+',start)')
-        if options.get('attendees'):
-            filter.append('?$filter=substringof('+options['attendees']+',itemBody/content)')
+    sep = '&'
+    filters = sep.join(filter)
 
-    list_events_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events/?select=id')
+
+    id_event_url = graph_api_endpoint.format('/Users/'+alias +'/calendar/events/?select=id,start&' + filters)
     #print(list_events_url)
     #print(access_token)
     # Set request headers.
@@ -172,15 +196,22 @@ def identifyEvent(access_token, alias, **options):
     'Content-Type' : 'application/json'
     }
 
-    r = requests.get(url = list_events_url, headers = headers)
+    r = requests.get(url = id_event_url, headers = headers)
     if (r.status_code == requests.codes.accepted):
         return r.status_code
         r = r.json()
-        if  len(r['value']) == 1 :
-            return r['value']['id']
-        elif  len(r['value']) == 0 :
+
+        desiredEvents = []
+        for events in r['value'] :
+            if events['start']['dateTime'][:events['start']['dateTime'].index('T')] == str(startDateTime.date()) :
+                desiredEvents.append(events)
+             
+
+        if  len(desiredEvents) == 1 :
+            return desiredEvents['id']
+        elif  len(desiredEvents) == 0 :
             raise TooFewValues()
-        elif len(r['value']) > 1 :
+        elif len(desiredEvents) > 1 :
             raise TooManyValues(r)
     else:
         return "{0}: {1}".format(r.status_code, r.text)

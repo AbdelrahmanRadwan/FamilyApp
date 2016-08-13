@@ -128,6 +128,8 @@ class LUISHandler(object):
 
         startDateTime = self.processDateTime(paramDict['datetime'])
         endDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
+                
+        title = paramDict['title'] if 'title' in paramDict.keys() else None
 
         loc = paramDict['location'] if 'location' in paramDict.keys() else None
         atten = paramDict['attendees'] if 'attendees' in paramDict.keys() else None
@@ -141,7 +143,7 @@ class LUISHandler(object):
             try:
                 r = Event.newEvent(access_token = access_token, 
                                alias = alias, 
-                               title = paramDict['title'],
+                               title = title,
                                startDateTime = startDateTime,
                                endDateTime = endDateTime,
                                location = loc,
@@ -149,18 +151,23 @@ class LUISHandler(object):
                                reminder = rem,
                                reminderTime = remtime)
                 print(r)
+                LUISHandler.SpCl.say("Event Created")
+
             except Exception as exc:
                 print (exc)
 
         elif intName == 'ListEvents':
-            Event.listEvents(access_token, alias, paramDict['title'], startDateTime, atten)
+
+            resp = Event.listEvents(access_token, alias, title, startDateTime, atten)
+            LUISHandler.SpCl.say(resp)
         elif intName == 'CheckFree':
-            Event.listEvents(access_token, alias, paramDict['title'], startDateTime)
+            resp = Event.listEvents(access_token, alias, title, startDateTime)
+            LUISHandler.SpCl.say(resp)
 
         elif intName == 'AddReminder' or 'ChangeEventDetail' or 'DeleteEvent' or 'GetEventDetails':
             
             try :
-                eventID = Event.identifyEvent(access_token, alias, paramDict['title'], paramDict['startDateTime'], paramDict['attendees'])
+                eventID = Event.identifyEvent(access_token, alias, title, startDateTime, atten)
             except Event.TooFewValues as exc:
                 print(exc)
                 pass
@@ -170,13 +177,16 @@ class LUISHandler(object):
 
             if intName == 'DeleteEvent':
                 Event.delete(access_token,alias,eventID)
+                LUISHandler.SpCl.say("Event Deleted")
             elif intName == 'AddReminder':
                 Event.updateEvent(access_token, alias,eventID, reminder = True)
+                LUISHandler.SpCl.say("Reminder Added")
             elif intName == 'ChangeEventDetail' :
                 Event.updateEvent(access_token, alias, eventID , paramDict['changeDateTime'], paramDict['changelocation'], paramDict['changeattendees'])
+                LUISHandler.SpCl.say("Details Changed ")
             elif intName == 'GetEventDetails':
-                Event.getEventDetails(access_token, alias, eventID, paramDict['title'], paramDict['location'],paramDict['startDateTime'],paramDict['attendees'])
-
+                resp = Event.getEventDetails(access_token, alias, eventID, paramDict['title'], paramDict['location'],paramDict['startDateTime'],paramDict['attendees'])
+                LUISHandler.SpCl.say(resp)
 
     def on_success(self, res:LUISResponse, listOfQueries:list, currentSpeaker:Individual):
         '''

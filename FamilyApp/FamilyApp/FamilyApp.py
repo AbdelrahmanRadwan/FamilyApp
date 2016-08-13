@@ -192,7 +192,7 @@ houseHoldEnrollmentProcess()
 
 #checkingEnrollment()
 
-howCanIHelp()
+#howCanIHelp()
 
 #graphInteraction(currentSpeaker)
 
@@ -207,7 +207,7 @@ howCanIHelp()
 #print(entity)
 #print(type)
 
-#text = 'add a meeting on monday the 3rd at 7 pm '
+text = 'remove my meeting on the 14th of december  '
 
 
-
+luishandler.convo(text, currentSpeaker)
