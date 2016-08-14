@@ -8,7 +8,7 @@ import ShoppingList
 import Todo
 import datetime
 import Individual
-
+import requests 
 
 class LUISHandler(object):
 
@@ -126,11 +126,14 @@ class LUISHandler(object):
             access_token = currentSpeaker.graphInfo.access_token
             alias = currentSpeaker.graphInfo.id
 
-        startDateTime = self.processDateTime(paramDict['datetime'])
-        endDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
+        if 'datetime' in paramDict.keys():
+            startDateTime = self.processDateTime(paramDict['datetime'])
+            endDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
+        if 'changeDateTime' in paramDict.keys():
+            changeStartDateTime = self.processDateTime(paramDict['datetime'])
+            changeEndDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
                 
         title = paramDict['title'] if 'title' in paramDict.keys() else None
-
         loc = paramDict['location'] if 'location' in paramDict.keys() else None
         atten = paramDict['attendees'] if 'attendees' in paramDict.keys() else None
         rem = paramDict['reminder'] if 'reminder' in paramDict.keys() else None
@@ -151,8 +154,10 @@ class LUISHandler(object):
                                reminder = rem,
                                reminderTime = remtime)
                 print(r)
-                LUISHandler.SpCl.say("Event Created")
-
+                if r is requests.codes.accepted:
+                    LUISHandler.SpCl.say("Event Created")
+                else :
+                    LUISHandler.SpCl.say("Sorry could not create event")
             except Exception as exc:
                 print (exc)
 

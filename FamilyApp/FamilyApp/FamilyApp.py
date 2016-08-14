@@ -207,7 +207,7 @@ houseHoldEnrollmentProcess()
 #print(entity)
 #print(type)
 
-text = 'remove my meeting on the 14th of december  '
+text = 'add a doctors appointment to the 9th of september at 7 pm '
 
 
 luishandler.convo(text, currentSpeaker)

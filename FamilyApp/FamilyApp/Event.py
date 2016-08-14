@@ -49,9 +49,10 @@ def newEvent(access_token,alias, title:str, startDateTime:datetime , endDateTime
     #print (data)
     r = requests.post(url = new_event_url, json = data, headers = headers)
     if (r.status_code == requests.codes.accepted):
-        return r.status_code
-        r = r.json()
+        
         print(r.json())
+        return r.status_code
+        
     else:
         return "{0}: {1}".format(r.status_code, r.text)
 
@@ -112,7 +113,7 @@ def getEventDetails(access_token, alias,id, **options):
 
     r = requests.get(url = get_event_details_url, headers = headers)
     if (response.status_code == requests.codes.accepted):
-        return response.status_code
+        #return response.status_code
         r.json()
 
         toSay = ""
@@ -126,10 +127,11 @@ def getEventDetails(access_token, alias,id, **options):
                 toSay += " location is " + l
             if options.get('startDateTime'):
                 dt = r['start']['dateTime']
-                toSay += " date is " + 
+                spl = split(dt, '-:T')
+                toSay += " date is " + spl[2] + " " +spl[1] + " at " + spl[4] + " " + spl[5]
             if options.get('attendees'):
-                self.dictOfInfo['attendees'] = r['body']['content']
-       
+                toSay += " with " + r['attemdees']
+        return toSay
     else:
         return "{0}: {1}".format(response.status_code, response.text)
 
