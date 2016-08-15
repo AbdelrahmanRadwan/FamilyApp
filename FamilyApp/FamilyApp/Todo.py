@@ -32,6 +32,10 @@ class TodoList(object):
     def finishedTodo(self, todo:Todo):
         self.q.get(todo)
 
+    def clear(self):
+        while self.q.empty() is not True:
+            self.q.get()
+
     def listTodos(self):
         pass
 

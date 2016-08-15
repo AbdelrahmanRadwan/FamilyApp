@@ -4,8 +4,8 @@ from luis_response import LUISResponse
 from luis_entity import LUISEntity
 from projectoxford import speech, audio
 import Event
-import ShoppingList
-import Todo
+from ShoppingList import ShoppingList, Item
+from Todo import TodoList, Todo
 import datetime
 import Individual
 import requests 
@@ -132,27 +132,25 @@ class LUISHandler(object):
         if 'changeDateTime' in paramDict.keys():
             changeStartDateTime = self.processDateTime(paramDict['datetime'])
             changeEndDateTime = startDateTime +datetime.timedelta(0,0,0,0,0,1,0)
-                
+           
+            #OriginalParameters    
         title = paramDict['title'] if 'title' in paramDict.keys() else None
         loc = paramDict['location'] if 'location' in paramDict.keys() else None
         atten = paramDict['attendees'] if 'attendees' in paramDict.keys() else None
         rem = paramDict['reminder'] if 'reminder' in paramDict.keys() else None
         remtime = paramDict['reminderTime'] if 'reminderTime' in paramDict.keys() else None
+            #ChangeParameters
+        changeloc = paramDict['changeLocation'] if 'changeLocation' in paramDict.keys() else None
+        changeatten = paramDict['changeAttendees'] if 'changeAttendees' in paramDict.keys() else None
+        changerem = paramDict['changeReminder'] if 'changeReminder' in paramDict.keys() else None
+        changeremtime = paramDict['chanegReminderTime'] if 'changeReminderTime' in paramDict.keys() else None
 
             ################################################
             #ALL THESE CALLS HAVE TO BE PUT IN THREADS
             #################################################
         if intName == 'AddEvent':
             try:
-                r = Event.newEvent(access_token = access_token, 
-                               alias = alias, 
-                               title = title,
-                               startDateTime = startDateTime,
-                               endDateTime = endDateTime,
-                               location = loc,
-                               companions =  atten,
-                               reminder = rem,
-                               reminderTime = remtime)
+                r = Event.newEvent(access_token = access_token, alias = alias, title = title,startDateTime = startDateTime,endDateTime = endDateTime, location = loc,companions =  atten,reminder = rem,reminderTime = remtime)
                 print(r)
                 if r is requests.codes.accepted:
                     LUISHandler.SpCl.say("Event Created")
@@ -184,14 +182,51 @@ class LUISHandler(object):
                 Event.delete(access_token,alias,eventID)
                 LUISHandler.SpCl.say("Event Deleted")
             elif intName == 'AddReminder':
-                Event.updateEvent(access_token, alias,eventID, reminder = True)
+                Event.updateEvent(access_token, alias,eventID, changerem)
                 LUISHandler.SpCl.say("Reminder Added")
             elif intName == 'ChangeEventDetail' :
-                Event.updateEvent(access_token, alias, eventID , paramDict['changeDateTime'], paramDict['changelocation'], paramDict['changeattendees'])
+                Event.updateEvent(access_token, alias, eventID ,changeStartDateTime, changeEndDateTime, changeloc, changeatten, changerem, changeremtime)
                 LUISHandler.SpCl.say("Details Changed ")
             elif intName == 'GetEventDetails':
-                resp = Event.getEventDetails(access_token, alias, eventID, paramDict['title'], paramDict['location'],paramDict['startDateTime'],paramDict['attendees'])
+                resp = Event.getEventDetails(access_token, alias, eventID, changeStartDateTime, changeEndDateTime, changeloc, changeatten, changerem, changeremtime)
                 LUISHandler.SpCl.say(resp)
+
+        todolist = paramDict['todoList'] if 'todoList' in paramDict.keys() else None
+        shoppinglist = paramDict['shoppingList'] if 'shoppingList' in paramDict.keys() else None
+        instruction = paramDict['instruction'] if 'instruction' in paramDict.keys() else None
+        itemname = paramDict['itemName'] if 'itemName' in paramDict.keys() else None
+        itemquantity = paramDict['itemQuantity'] if 'itemQuantity' in paramDict.keys() else None
+
+        if intName == 'Add' :
+            if todolist is not None:
+                inds['alias'].todoList.addTodo(Todo(content = instruction) )
+            elif shoppinglist is not None :
+                inds['alias'].shoppingList.addItems(Item(itemname, itemquantity))
+            pass
+        elif intName == 'Delete' :
+            if todolist is not None:
+                inds['alias'].todoList.finishedTodo(Todo(content = instruction) )
+            elif shoppinglist is not None :
+                inds['alias'].shoppingList.deleteItems(Item(itemname, itemquantity))
+            pass
+        elif intName == 'Email' :
+            if todolist is not None:
+                Event.sendEmail(access_token,alias,alias,"Todo List", inds['alias'].todoList.listTodos())
+            elif shoppinglist is not None :
+                inds['alias'].shoppingList.emailList(access_token, alias)
+            pass
+        elif intName == 'Clear' :
+            if todolist is not None:
+                inds['alias'].todoList.clear()
+            elif shoppinglist is not None :
+                inds['alias'].shoppingList.clear()
+            pass
+        elif intName == 'List' :
+            if todolist is not None:
+                inds['alias'].todoList.listTodos()
+            elif shoppinglist is not None :
+                inds['alias'].shoppingList.listItems()
+            pass
 
     def on_success(self, res:LUISResponse, listOfQueries:list, currentSpeaker:Individual):
         '''
@@ -208,31 +243,32 @@ class LUISHandler(object):
         paramDict = {}
         for eachParam in pars:
             values = eachParam.get_parameter_values()
-            if len(values) == 1 :
-               if 'builtin.datetime' in values[0].get_type():
-                    paramDict[eachParam.get_name()] = values[0].get_resolution()
-                    #if 'date' in values[0].get_resolution():
-                    #    paramDict[eachParam.get_name()] = values[0].get_resolution()['date']
-                    #elif 'time' in values[0].get_resolution():
-                    #    paramDict[eachParam.get_name()] = values[0].get_resolution()['time']
-                    #elif 'duration' in values[0].get_resolution():
-                    #    paramDict[eachParam.get_name()] = values[0].get_resolution()['duration']
-               else:
-                    paramDict[eachParam.get_name()] = values[0].get_name()
-            elif len(values) >1:
-                listOfVals = []
-                for eachVal in values :
-                    if 'builtin.datetime' in eachVal.get_type():
-                        listOfVals.append(eachVal.get_resolution())
-                        #if 'date' in eachVal.get_resolution():
-                        #    listOfVals.append(eachVal.get_resolution()['date'])
-                        #elif 'time' in eachVal.get_resolution():
-                        #    listOfVals.append(eachVal.get_resolution()['time'])
-                        #elif 'duration' in eachVal.get_resolution():
-                        #    listOfVals.append(eachVal.get_resolution()['duration'])
-                else:
-                    listOfVals.append(eachVal.get_name())
-                paramDict[eachParam.get_name()] = listOfVals 
+            if len(values) >0 :
+                if len(values) == 1 :
+                   if 'builtin.datetime' in values[0].get_type():
+                        paramDict[eachParam.get_name()] = values[0].get_resolution()
+                        #if 'date' in values[0].get_resolution():
+                        #    paramDict[eachParam.get_name()] = values[0].get_resolution()['date']
+                        #elif 'time' in values[0].get_resolution():
+                        #    paramDict[eachParam.get_name()] = values[0].get_resolution()['time']
+                        #elif 'duration' in values[0].get_resolution():
+                        #    paramDict[eachParam.get_name()] = values[0].get_resolution()['duration']
+                   else:
+                        paramDict[eachParam.get_name()] = values[0].get_name()
+                elif len(values) >1:
+                    listOfVals = []
+                    for eachVal in values :
+                        if 'builtin.datetime' in eachVal.get_type():
+                            listOfVals.append(eachVal.get_resolution())
+                            #if 'date' in eachVal.get_resolution():
+                            #    listOfVals.append(eachVal.get_resolution()['date'])
+                            #elif 'time' in eachVal.get_resolution():
+                            #    listOfVals.append(eachVal.get_resolution()['time'])
+                            #elif 'duration' in eachVal.get_resolution():
+                            #    listOfVals.append(eachVal.get_resolution()['duration'])
+                    else:
+                        listOfVals.append(eachVal.get_name())
+                    paramDict[eachParam.get_name()] = listOfVals 
 
         self.callAppropriateFunc(intName, ent, paramDict , listOfQueries, currentSpeaker)
 
