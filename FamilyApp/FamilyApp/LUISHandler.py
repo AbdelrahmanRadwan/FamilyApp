@@ -40,7 +40,7 @@ class LUISHandler(object):
         try :
             res = LUISHandler.LuisCl.predict_sync(text)
    
-            if res.get_top_intent().get_score() >0.7:
+            if res.get_top_intent().get_score() >0.6:
                 if res.get_dialog() is not None :
                     while not res.get_dialog().is_finished():
                         print(res.get_dialog().get_status())
@@ -73,28 +73,42 @@ class LUISHandler(object):
         if type(input) is dict:
             if 'date' in input.keys() :
                 date = input['date']
-                date = date.replace('XXXX',str(datetime.date.today().year))
                 if int(date[-2:]) > datetime.date.today().day :
                     date = date.replace('XX',str(datetime.date.today().month))
+                    m=datetime.date.today().month
                 else:
                     date = date.replace('XX',str(datetime.date.today().month+1))
+                    m= datetime.date.today().month+1
+                
+                date = date.replace('XXXX',str(datetime.date.today().year))
+                
                 self.startDateTime = datetime.datetime.strptime( date, '%Y-%m-%d')
-                self.startDateTime.replace(hour = 12)
+                if self.startDateTime.month < datetime.date.today().month :
+                    self.startDateTime = self.startDateTime.replace(year = datetime.date.today().year+1)
+
+                self.startDateTime = self.startDateTime.replace(hour=12)
+
             elif 'time' in input.keys() :
                 self.startDateTime.date = datetime.date.today()
                 time = split(input['time'],':')
-                self.startDateTime.replace(hour = time[0], minute = time[1], second = time[2])
+                self.startDateTime = self.startDateTime.replace(hour = time[0], minute = time[1], second = time[2])
 
         elif type(input) is list :
             if input[1:] == input[:1]:
                 date = input[0]
-                date = date.replace('XXXX',str(datetime.date.today().year))
                 if int(date[-2:]) > datetime.date.today().day :
                     date = date.replace('XX',str(datetime.date.today().month))
+                    m=datetime.date.today().month
                 else:
                     date = date.replace('XX',str(datetime.date.today().month+1))
-                dt = split(input[0], '-: ')
+                    m= datetime.date.today().month+1
+                
+                date = date.replace('XXXX',str(datetime.date.today().year))
+
+                dt = split(date, '-: ')
                 self.startDateTime = datetime.datetime(dt[0], dt[1], dt[2],dt[3],dt[4])
+                if self.startDateTime.month < datetime.date.today().month :
+                    self.startDateTime.replace(year = datetime.date.today().year+1)
             else:
                 for eachdatetime in input:
                     if eachdatetime['date'] is not None:
@@ -152,7 +166,7 @@ class LUISHandler(object):
             try:
                 r = Event.newEvent(access_token = access_token, alias = alias, title = title,startDateTime = startDateTime,endDateTime = endDateTime, location = loc,companions =  atten,reminder = rem,reminderTime = remtime)
                 print(r)
-                if r is requests.codes.accepted:
+                if r is requests.codes.accepted or requests.codes.ok:
                     LUISHandler.SpCl.say("Event Created")
                 else :
                     LUISHandler.SpCl.say("Sorry could not create event")

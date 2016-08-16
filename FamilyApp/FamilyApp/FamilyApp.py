@@ -162,7 +162,7 @@ def howCanIHelp():
         iden = myHome.houseSpeaker.identify_file( wavFile, listOfIDs)
         print(time.clock())
         print("Identified: " , iden)
-        if iden.get_confidence() == 'High' or 'Normal' :
+        if iden.get_confidence() == 'High' or 'Normal' and iden.get_identified_profile_id is not '00000000-0000-0000-0000-000000000000':
             global currentSpeaker
             currentSpeaker = myHome.dictionaryOfIndividuals[ myHome.dictionaryOfSpeakerIDtoName[ iden.get_identified_profile_id() ]]
         else :
@@ -192,7 +192,7 @@ houseHoldEnrollmentProcess()
 
 #checkingEnrollment()
 
-#howCanIHelp()
+howCanIHelp()
 
 #graphInteraction(currentSpeaker)
 
@@ -207,7 +207,7 @@ houseHoldEnrollmentProcess()
 #print(entity)
 #print(type)
 
-text = 'add a doctors appointment to the 9th of september at 7 pm '
+#text = 'add a doctors appointment to the 9th of september at 7 pm '
 
 
-luishandler.convo(text, currentSpeaker)
+#luishandler.convo(text, currentSpeaker)

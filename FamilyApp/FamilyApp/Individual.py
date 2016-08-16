@@ -6,9 +6,9 @@ from projectoxford import speech
 from projectoxford import audio
 import random
 import wave
-import Todo
-import ShoppingList
-import Reminders
+from Todo import Todo, TodoList
+from ShoppingList import ShoppingList
+
 
 class Individual(object):
     """description of class"""
@@ -24,7 +24,7 @@ class Individual(object):
         self.graphInfo = graphInfo
         self.enrolled = False
         #self.reminders = Reminders()
-        self.todoList = Todo()
+        self.todoList = TodoList()
         self.shoppingList = ShoppingList()
 
         #self.personSpeech = SpeechClient(key = speechKey, locale = 'en-US', gender='Male')
